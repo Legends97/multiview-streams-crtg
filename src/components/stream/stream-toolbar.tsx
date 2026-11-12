@@ -6,6 +6,7 @@ import {
   MessageSquare,
   Minimize,
   Monitor,
+  Play,
   RotateCcw,
   TriangleAlert,
 } from "lucide-react";
@@ -63,6 +64,7 @@ export function StreamToolbar({
   const setTheaterMode = usePlayerStore((state) => state.setTheaterMode);
   const restoreLayout = usePlayerStore((state) => state.restoreLayout);
   const reset = usePlayerStore((state) => state.reset);
+  const requestStart = usePlayerStore((state) => state.requestStart);
 
   const usableLayouts = getUsableLayouts(availableCount);
   const activePreset = usableLayouts.find((preset) => preset.id === layoutId);
@@ -94,6 +96,14 @@ export function StreamToolbar({
           </button>
         ))}
       </div>
+
+      {/* Browser blockieren Autoplay haeufig; dieser Klick startet alles. */}
+      <SimpleTooltip label="Wiedergabe aller Streams starten">
+        <Button variant="secondary" size="sm" onClick={requestStart}>
+          <Play />
+          <span className="hidden sm:inline">Streams starten</span>
+        </Button>
+      </SimpleTooltip>
 
       {activePreset?.heavy ? (
         <Badge variant="warning" className="hidden sm:inline-flex">

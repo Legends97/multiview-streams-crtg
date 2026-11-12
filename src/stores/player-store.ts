@@ -22,6 +22,12 @@ interface PlayerState extends PlayerLayoutState {
   layoutBeforeMaximize: LayoutId | null;
   /** Wurde der Zustand aus Server bzw. localStorage übernommen? */
   hydrated: boolean;
+  /**
+   * Zeitstempel der letzten Start-Anforderung. Jede Änderung weist alle
+   * Kacheln an, die Wiedergabe zu starten — nötig, weil Browser Autoplay
+   * blockieren und Twitch das nicht meldet.
+   */
+  startEpoch: number;
 }
 
 interface PlayerActions {
@@ -40,6 +46,8 @@ interface PlayerActions {
   setChatVisible(visible: boolean): void;
   setChatTab(tab: ChatTab): void;
   setTheaterMode(active: boolean): void;
+  /** Alle montierten Player starten (durch Klick des Zuschauers). */
+  requestStart(): void;
   reset(): void;
 }
 
@@ -58,6 +66,7 @@ const initialState: PlayerState = {
   maximizedSlot: null,
   layoutBeforeMaximize: null,
   hydrated: false,
+  startEpoch: 0,
 };
 
 /**
@@ -195,6 +204,10 @@ export const usePlayerStore = create<PlayerStore>()((set, get) => ({
 
   setChatTab(tab) {
     set({ chatTab: tab });
+  },
+
+  requestStart() {
+    set({ startEpoch: Date.now() });
   },
 
   setTheaterMode(active) {

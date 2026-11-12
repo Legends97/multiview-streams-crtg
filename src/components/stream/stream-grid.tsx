@@ -47,6 +47,7 @@ export function StreamGrid({
     })),
   );
 
+  const startEpoch = usePlayerStore((state) => state.startEpoch);
   const volumes = usePlayerStore((state) => state.volumes);
   const muted = usePlayerStore((state) => state.muted);
 
@@ -122,6 +123,7 @@ export function StreamGrid({
               isMaximized={maximizedSlot === slotIndex}
               availableStreams={availableStreams}
               assignedIds={slots}
+              startEpoch={startEpoch}
               onFocus={focusStream}
               onAssign={handleAssign}
               onToggleMute={toggleMute}

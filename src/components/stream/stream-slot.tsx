@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertCircle, Plus, RefreshCw, WifiOff } from "lucide-react";
+import { AlertCircle, Play, Plus, RefreshCw, WifiOff } from "lucide-react";
 import { memo, useCallback, useEffect, useState } from "react";
 
 import { StreamOverlay } from "@/components/stream/stream-overlay";
@@ -20,12 +20,19 @@ import { cn } from "@/lib/utils/cn";
 import type { StreamConfig, StreamStatus } from "@/types/stream";
 
 /**
- * Wartezeit, bis eine Kachel ohne Rückmeldung als haengend gilt.
+ * Wartezeit, bis eine Kachel ohne jede Rückmeldung als haengend gilt.
  *
- * Twitch meldet fuer Kanaele, die nicht senden, haeufig gar kein Ereignis —
+ * Betrifft nur den Fall, dass Twitch weder "online" noch "offline" meldet —
  * die Kachel wuerde sonst dauerhaft "wird geladen" anzeigen.
  */
 const LOADING_TIMEOUT_MS = 15_000;
+
+/**
+ * Wartezeit, bis einem sendenden Kanal ohne laufendes Video der Startknopf
+ * angeboten wird. Lange genug, damit Autoplay und die beiden automatischen
+ * Startversuche des Players zuerst greifen koennen.
+ */
+const START_HINT_DELAY_MS = 9000;
 
 export interface StreamSlotProps {
   slotIndex: number;
@@ -39,6 +46,8 @@ export interface StreamSlotProps {
   isMaximized: boolean;
   availableStreams: StreamConfig[];
   assignedIds: (string | null)[];
+  /** Zaehlt hoch, wenn alle Streams gemeinsam gestartet werden sollen. */
+  startEpoch?: number;
   onFocus: (streamId: string) => void;
   onAssign: (slotIndex: number, streamId: string) => void;
   onToggleMute: (streamId: string) => void;
@@ -65,6 +74,7 @@ function StreamSlotComponent({
   isMaximized,
   availableStreams,
   assignedIds,
+  startEpoch = 0,
   onFocus,
   onAssign,
   onToggleMute,
@@ -75,8 +85,14 @@ function StreamSlotComponent({
 }: StreamSlotProps) {
   const [playerStatus, setPlayerStatus] = useState<StreamStatus>("unknown");
   const [reloadKey, setReloadKey] = useState(0);
+  // Laeuft tatsaechlich Video? Ein sendender Kanal allein genuegt nicht.
+  const [playing, setPlaying] = useState(false);
+  // Lokale Startversuche dieser Kachel.
+  const [localStarts, setLocalStarts] = useState(0);
   // Kachel haengt im Ladezustand fest, ohne dass Twitch etwas meldet.
   const [stalled, setStalled] = useState(false);
+  // Wurde der Startknopf freigeschaltet? Wird nur im Timer gesetzt.
+  const [hintArmed, setHintArmed] = useState(false);
   const { ref, mounted } = useLazyMount<HTMLDivElement>({ keepMounted: isFocused });
 
   const handleStatusChange = useCallback((next: StreamStatus) => {
@@ -85,13 +101,29 @@ function StreamSlotComponent({
     // Sobald eine eindeutige Rueckmeldung kommt, ist die Kachel nicht mehr
     // haengend — auch wenn der Stream erst nach der Wartezeit startet.
     if (next !== "loading" && next !== "unknown") setStalled(false);
+    if (next === "offline" || next === "not_found") setPlaying(false);
   }, []);
+
+  const handlePlaybackChange = useCallback((next: boolean) => {
+    setPlaying(next);
+
+    if (next) setHintArmed(false);
+  }, []);
+
+  const startPlayback = useCallback(() => setLocalStarts((count) => count + 1), []);
 
   const retry = useCallback(() => {
     setStalled(false);
+    setPlaying(false);
+    setHintArmed(false);
     setPlayerStatus("loading");
     setReloadKey((key) => key + 1);
   }, []);
+
+  // Startsignal an den Player: der lokale Zaehler und der Zeitstempel der
+  // Toolbar zusammen. Jede Aenderung einer der beiden Quellen ergibt einen
+  // neuen Wert und damit genau einen Startversuch.
+  const startSignal = localStarts + startEpoch;
 
   const status: StreamStatus =
     externalStatus === "not_found"
@@ -110,6 +142,15 @@ function StreamSlotComponent({
 
     return () => window.clearTimeout(timer);
   }, [mounted, waiting, stalled, reloadKey]);
+
+  // Sendender Kanal, aber kein Video: nach kurzer Wartezeit zum Start bitten.
+  useEffect(() => {
+    if (!mounted || status !== "live" || playing) return;
+
+    const timer = window.setTimeout(() => setHintArmed(true), START_HINT_DELAY_MS);
+
+    return () => window.clearTimeout(timer);
+  }, [mounted, status, playing, reloadKey]);
 
   // Leerer Slot: Auswahl anbieten, nichts laden.
   if (!stream) {
@@ -146,6 +187,7 @@ function StreamSlotComponent({
 
   const showPlayer = mounted && status !== "offline" && status !== "not_found";
   const showStalled = showPlayer && stalled;
+  const showStartButton = showPlayer && status === "live" && !playing && hintArmed;
 
   return (
     <div
@@ -179,7 +221,9 @@ function StreamSlotComponent({
             muted={muted}
             volume={volume}
             quality={quality}
+            startSignal={startSignal}
             onStatusChange={handleStatusChange}
+            onPlaybackChange={handlePlaybackChange}
           />
         </ErrorBoundary>
       ) : null}
@@ -207,6 +251,30 @@ function StreamSlotComponent({
           actionLabel={status === "offline" ? "Erneut versuchen" : undefined}
           onAction={status === "offline" ? retry : undefined}
         />
+      ) : null}
+
+      {/* Der Kanal sendet, aber der Browser hat die Wiedergabe nicht von
+          selbst gestartet. Bewusst durchscheinend: dahinter liegt der
+          fertig geladene Stream, ein Klick genügt. */}
+      {showStartButton ? (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-background/70 px-4 text-center">
+          <p className="font-display text-sm font-semibold uppercase">
+            {stream.name} ist live
+          </p>
+          <Button
+            size="sm"
+            onClick={(event) => {
+              event.stopPropagation();
+              startPlayback();
+            }}
+          >
+            <Play />
+            Stream starten
+          </Button>
+          <p className="max-w-xs text-xs text-muted">
+            Der Browser startet Videos erst nach einem Klick.
+          </p>
+        </div>
       ) : null}
 
       {/* Keine Rueckmeldung innerhalb der Wartezeit. Der Player bleibt im

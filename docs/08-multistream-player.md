@@ -138,6 +138,8 @@ interface PlayerState {
 | Kanal offline | Player-Event `OFFLINE` oder Helix-Status | gedimmtes Tile, Badge "OFFLINE", Button "Erneut versuchen" |
 | Kanal existiert nicht | Helix meldet den Login nicht | Badge "Kanal nicht gefunden", Hinweis auf die Config |
 | Wiedergabe blockiert | `PLAYBACK_BLOCKED` | Play-Button-Overlay |
+| Kanal sendet, Video startet nicht | `ONLINE` ohne `PLAYING` | zwei automatische `play()`-Versuche, danach durchscheinendes Overlay "Stream starten" über dem geladenen Player |
+| Gar keine Rückmeldung | weder `ONLINE` noch `OFFLINE` nach 15 s | Hinweis "Keine Rückmeldung" mit "Erneut versuchen"; der Player bleibt montiert |
 | Script lädt nicht | `onerror` im Loader | Fehlerkarte mit Reload, restliche UI bleibt bedienbar |
 | Verbindung abgebrochen | `ENDED` ohne Benutzeraktion | drei Reconnect-Versuche mit 2 s, 5 s, 15 s Abstand, dann Offline-Darstellung |
 | Stream während des Rennens weg | Event-Kombination | Tile bleibt im Slot, der Fahrer verschwindet nicht aus der Auswahl |

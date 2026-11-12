@@ -144,6 +144,15 @@ const player = new window.Twitch.Player(containerId, {
   Pflicht, Vollbild nur über eine Benutzeraktion
 - `PLAYBACK_BLOCKED` abfangen und einen Play-Button über dem Tile anzeigen, statt stumm zu
   scheitern
+- **Wichtig:** Lehnt der Browser den Start ab, meldet Twitch häufig überhaupt nichts —
+  weder `PLAYING` noch `PLAYBACK_BLOCKED`. Der Player bleibt still auf "bereit" stehen.
+  Deshalb gilt `ONLINE` als Beleg dafür, dass der Kanal sendet, und `PLAYING` getrennt
+  davon als Beleg dafür, dass Video läuft. Wer nur auf `PLAYING` wartet, zeigt einen
+  laufenden Stream fälschlich als tot an
+- Nach `ONLINE` ruft der Player zweimal selbst `play()` auf (nach 2,5 s und 7 s). Bleibt es
+  dabei, bietet die Kachel einen Startknopf an; die Werkzeugleiste startet mit
+  "Streams starten" alle Kacheln auf einmal. Der Klick liefert die Nutzeraktion, die der
+  Browser verlangt
 - Lautstärke pro Stream in `user_settings.volumes` speichern, damit sie beim nächsten
   Besuch wieder stimmt
 
