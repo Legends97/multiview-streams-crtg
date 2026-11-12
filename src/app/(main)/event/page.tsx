@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import { SponsorRow } from "@/components/layout/sponsor-row";
@@ -31,6 +32,17 @@ export default function EventPage() {
     <div className="mx-auto max-w-[1920px] px-4 py-10 lg:px-6 lg:py-14">
       {/* Kopf */}
       <header className="max-w-3xl">
+        {race.team.logo ? (
+          <Image
+            src={race.team.logo}
+            alt={race.team.name}
+            width={493}
+            height={400}
+            priority
+            className="mb-7 h-28 w-auto sm:h-36"
+          />
+        ) : null}
+
         <div className="flex flex-wrap items-center gap-3">
           <StatusBadge status={raceState.status} />
           <span className="text-xs font-medium uppercase tracking-widest text-muted">

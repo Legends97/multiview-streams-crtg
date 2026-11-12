@@ -38,7 +38,7 @@ export function SiteHeader({ status, viewers = null, user = null, userMenu }: Si
               width={493}
               height={400}
               priority
-              className="h-10 w-auto shrink-0"
+              className="h-12 w-auto shrink-0"
             />
           ) : (
             <span
