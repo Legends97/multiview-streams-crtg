@@ -16,7 +16,6 @@ import { getFallbackRaceState } from "@/lib/race/state";
 import { formatDateTime, getServerNow } from "@/lib/utils/time";
 
 export const metadata: Metadata = {
-  title: "Rennen",
   description: "Rennstatus, Rennzeit, Fahrzeuge und Zeitplan des 24-Stunden-Rennens.",
 };
 

@@ -11,6 +11,8 @@ import type { EventConfig } from "@/types/event";
  */
 const rawEvent: EventConfig = {
   title: "24H RACE LIVE",
+  // Steht in der Browser-Registerkarte, auf jeder Seite gleich.
+  browserTitle: "CRTG 24H Nordschleife",
   subtitle: "Unser Team bei den 24 Stunden der Nordschleife",
   description:
     "24 Stunden Nordschleife: alle Onboard-Perspektiven unseres Teams gleichzeitig. Wechsle jederzeit den Blickwinkel und bleib im Chat mit der Community in Verbindung.",

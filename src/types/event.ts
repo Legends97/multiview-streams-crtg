@@ -37,6 +37,12 @@ export interface EventFact {
 /** Texte und Links der Event-Seite, aus src/config/event.ts. */
 export interface EventConfig {
   title: string;
+  /**
+   * Beschriftung der Browser-Registerkarte. Ohne Angabe wird `title`
+   * verwendet. Getrennt, weil `title` zugleich die grosse Ueberschrift
+   * der Startseite ist.
+   */
+  browserTitle?: string;
   subtitle: string;
   description: string;
   teamDescription: string;

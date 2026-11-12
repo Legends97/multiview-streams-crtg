@@ -192,7 +192,8 @@ Netzwerkverkehr.
 import type { EventConfig } from "@/types/event";
 
 export const event: EventConfig = {
-  title: "24H RACE LIVE",
+  title: "24H RACE LIVE",            // zugleich die Ueberschrift der Startseite
+  browserTitle: "CRTG 24H Nordschleife", // optional, nur die Browser-Registerkarte
   subtitle: "Unser Team im 24-Stunden-Rennen",
   description: "Zwei Sätze zum Event, erscheinen im Hero und auf der Event-Seite.",
   teamDescription: "Längerer Text über das Team für die Event-Seite.",

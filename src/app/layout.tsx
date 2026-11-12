@@ -20,11 +20,16 @@ const barlow = Barlow_Condensed({
   display: "swap",
 });
 
+/** Beschriftung der Browser-Registerkarte, getrennt von der Ueberschrift. */
+const browserTitle = event.browserTitle ?? event.title;
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  // Alle Seiten tragen bewusst dieselbe Beschriftung in der Registerkarte.
+  // Setzt eine Seite einen eigenen Titel, haengt sie die Beschriftung an.
   title: {
-    default: `${event.title} — ${race.team.name}`,
-    template: `%s — ${event.title}`,
+    default: browserTitle,
+    template: `%s — ${browserTitle}`,
   },
   description: event.description,
   applicationName: event.title,

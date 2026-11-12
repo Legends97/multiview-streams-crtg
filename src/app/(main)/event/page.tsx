@@ -16,7 +16,6 @@ import { getSocialIcon } from "@/lib/utils/social";
 import { formatDateTime, getServerNow } from "@/lib/utils/time";
 
 export const metadata: Metadata = {
-  title: "Event",
   description:
     "Team, Fahrer, Fahrzeuge, Strecke und Zeitplan des 24-Stunden-Rennens auf der Nordschleife.",
 };

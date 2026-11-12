@@ -92,6 +92,7 @@ export const raceConfigSchema = z.object({
 
 export const eventConfigSchema = z.object({
   title: z.string().min(1).max(60),
+  browserTitle: z.string().min(1).max(60).optional(),
   subtitle: z.string().min(1).max(120),
   description: z.string().min(1).max(600),
   teamDescription: z.string().min(1).max(2000),
