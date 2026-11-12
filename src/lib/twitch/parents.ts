@@ -49,6 +49,17 @@ export function buildChatEmbedUrl(channel: string, parents: string[]): string {
   return url.toString();
 }
 
+/**
+ * Twitch-Chat in einem eigenen Fenster.
+ *
+ * Rückfallebene, wenn das eingebettete Chat-Fenster leer bleibt: Browser,
+ * die Drittanbieter-Cookies blockieren, verweigern dem Embed den Zugriff auf
+ * die Twitch-Anmeldung. Im eigenen Fenster gelten diese Beschränkungen nicht.
+ */
+export function buildChatPopoutUrl(channel: string): string {
+  return `https://www.twitch.tv/popout/${channel}/chat?popout=`;
+}
+
 /** Direktlink auf den Kanal, als Rückfallebene für blockierte Embeds. */
 export function buildChannelUrl(channel: string): string {
   return `https://www.twitch.tv/${channel}`;

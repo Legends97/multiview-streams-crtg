@@ -4,7 +4,11 @@ import { ExternalLink, Info } from "lucide-react";
 import { useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
-import { buildChannelUrl, buildChatEmbedUrl, getTwitchParents } from "@/lib/twitch/parents";
+import {
+  buildChatEmbedUrl,
+  buildChatPopoutUrl,
+  getTwitchParents,
+} from "@/lib/twitch/parents";
 import { cn } from "@/lib/utils/cn";
 
 /**
@@ -44,25 +48,32 @@ export function TwitchChatEmbed({
         src={src}
         title={`Twitch-Chat von ${channelLabel ?? channel}`}
         className="min-h-0 w-full flex-1 border-0"
-        sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-popups-to-escape-sandbox"
+        // Dieselben Freigaben, die der offizielle Twitch-Player fuer sein
+        // eigenes iframe setzt. Ohne allow-storage-access-by-user-activation
+        // bleibt der Chat leer, sobald Drittanbieter-Cookies blockiert sind.
+        sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation"
       />
 
-      <div className="flex items-start gap-2 border-t border-border bg-surface px-3 py-2">
-        <Info className="mt-0.5 size-3.5 shrink-0 text-subtle" aria-hidden="true" />
-        <p className="text-[11px] leading-snug text-subtle">
-          Zum Schreiben ist eine Twitch-Anmeldung im Chat-Fenster nötig. Blockiert der
-          Browser Drittanbieter-Cookies, ist der Chat nur lesbar.
-        </p>
-        <Button asChild variant="ghost" size="icon-sm" className="ml-auto shrink-0">
+      <div className="shrink-0 border-t border-border bg-surface px-3 py-2">
+        <Button asChild variant="secondary" size="sm" className="w-full">
           <a
-            href={buildChannelUrl(channel)}
+            href={buildChatPopoutUrl(channel)}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Kanal auf Twitch öffnen"
           >
             <ExternalLink />
+            Chat in eigenem Fenster öffnen
           </a>
         </Button>
+
+        <div className="mt-2 flex items-start gap-2">
+          <Info className="mt-0.5 size-3.5 shrink-0 text-subtle" aria-hidden="true" />
+          <p className="text-[11px] leading-snug text-subtle">
+            Bleibt das Fenster leer oder lässt sich nichts schreiben, blockiert dein
+            Browser Drittanbieter-Cookies. Im eigenen Fenster funktioniert der Chat
+            dann trotzdem.
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -170,13 +170,21 @@ src.searchParams.set("darkpopout", "");   // dunkles Chat-Theme
   src={src.toString()}
   title={`Twitch-Chat von ${channel}`}
   className="h-full w-full border-0"
-  sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+  sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals
+           allow-popups-to-escape-sandbox allow-storage-access-by-user-activation"
 />;
 ```
 
 Hinweise:
 
 - `key={channel}` ist wichtig: ohne Remount behält das iframe den alten Kanal
+- **`allow-storage-access-by-user-activation` nicht weglassen.** Ohne diese Freigabe
+  bleibt das Chat-Fenster leer, sobald der Browser Drittanbieter-Cookies blockiert —
+  Twitch kann dann nicht auf die eigene Anmeldung zugreifen. Der offizielle
+  Twitch-Player setzt dieselben Freigaben fuer sein eigenes iframe
+- Als Rückfallebene steht unter dem Chat ein Knopf "Chat in eigenem Fenster öffnen"
+  (`buildChatPopoutUrl`). Dort gelten die Embed-Beschränkungen nicht, Lesen und Schreiben
+  funktionieren auch bei strengen Cookie-Einstellungen
 - Das Chat-Embed bringt seinen eigenen Twitch-Login mit; die Plattform-Anmeldung hat damit
   nichts zu tun. Das wird in der UI erklärt, sonst entsteht Verwirrung
 - Moderationswerkzeuge im Twitch-Chat gehören zu Twitch, nicht zur Plattform. Die eigene
