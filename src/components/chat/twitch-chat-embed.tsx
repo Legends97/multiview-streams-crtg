@@ -5,6 +5,7 @@ import { useMemo } from "react";
 
 import { TwitchChatComposer } from "@/components/chat/twitch-chat-composer";
 import { Button } from "@/components/ui/button";
+import { hasTwitchClientId } from "@/lib/env";
 import {
   buildChatEmbedUrl,
   buildChatPopoutUrl,
@@ -23,6 +24,9 @@ import { cn } from "@/lib/utils/cn";
  * zuverlässig, und das Eingabefeld bleibt wirkungslos. Die Quelle ist fest
  * auf twitch.tv verdrahtet, nicht konfigurierbar.
  */
+/** Hoehe von Twitchs eigener Eingabeleiste am unteren Rand des Fensters. */
+const TWITCH_COMPOSER_HEIGHT_PX = 96;
+
 export function TwitchChatEmbed({
   channel,
   channelLabel,
@@ -47,6 +51,9 @@ export function TwitchChatEmbed({
     );
   }
 
+  // Nur verdecken, wenn es Ersatz gibt — sonst bliebe gar kein Feld.
+  const hideTwitchComposer = hasTwitchClientId();
+
   return (
     <div className={cn("flex min-h-0 flex-col", className)}>
       <div className="flex shrink-0 items-center gap-1 border-b border-border bg-card px-3 py-1.5">
@@ -67,12 +74,23 @@ export function TwitchChatEmbed({
         </Button>
       </div>
 
-      <iframe
-        key={channel}
-        src={src}
-        title={`Twitch-Chat von ${channelLabel ?? channel}`}
-        className="min-h-0 w-full flex-1 border-0"
-      />
+      {/* Twitchs eigene Eingabeleiste sitzt unten im Fenster und bleibt
+          wirkungslos, sobald der Browser Cookies von twitch.tv blockiert.
+          Sie laesst sich von aussen nicht entfernen — also laeuft das
+          Fenster unten ueber und der Ueberstand wird abgeschnitten. */}
+      <div className="relative min-h-0 flex-1 overflow-hidden">
+        <iframe
+          key={channel}
+          src={src}
+          title={`Twitch-Chat von ${channelLabel ?? channel}`}
+          className="absolute inset-x-0 top-0 border-0"
+          style={{
+            height: hideTwitchComposer
+              ? `calc(100% + ${TWITCH_COMPOSER_HEIGHT_PX}px)`
+              : "100%",
+          }}
+        />
+      </div>
 
       <TwitchChatComposer channel={channel} />
     </div>
