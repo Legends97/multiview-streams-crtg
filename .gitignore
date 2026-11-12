@@ -1,15 +1,32 @@
 # ---------------------------------------------------------------------------
-# Zugangsdaten — niemals ins Repository
+# Zugangsdaten
 # ---------------------------------------------------------------------------
 .env
 .env.local
 .env.*.local
 
 # ---------------------------------------------------------------------------
-# Technisch erzwungene Ausnahme
+# Erzeugte Ordner — duerfen NICHT ins Repository
 #
-# GitHub lehnt einzelne Dateien ueber 100 MB ab. Diese Binaerdatei ist 110 MB
-# gross und wird von "npm install" automatisch passend zum Betriebssystem
-# neu geladen.
+# Git unter Windows speichert kein Ausfuehrbar-Bit. Mitgelieferte
+# node_modules sind auf dem Linux-Server von Vercel deshalb nicht
+# ausfuehrbar: der Build bricht mit "Permission denied" und Exit-Code 126 ab.
+# Vercel installiert die Pakete selbst aus package-lock.json, die im
+# Repository liegt.
 # ---------------------------------------------------------------------------
-node_modules/@next/swc-win32-x64-msvc/next-swc.win32-x64-msvc.node
+node_modules/
+.next/
+out/
+build/
+next-env.d.ts
+*.tsbuildinfo
+
+# ---------------------------------------------------------------------------
+# Lokales
+# ---------------------------------------------------------------------------
+.vercel/
+npm-debug.log*
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,9 +1,0 @@
-{
-  "/(main)/event/page": "/event",
-  "/(main)/live/page": "/live",
-  "/(main)/page": "/",
-  "/(main)/race/page": "/race",
-  "/_global-error/page": "/_global-error",
-  "/_not-found/page": "/_not-found",
-  "/icon.svg/route": "/icon.svg"
-}
