@@ -30,6 +30,7 @@ const rawRace: RaceConfig = {
     // Multiklasse-Event: Fahrzeug, Startnummer und Klasse stehen je Fahrer
     // in src/config/streams.ts, nicht hier.
     name: "Chaos Racing Team Germany",
+    logo: "/logos/team-logo.png",
   },
   startsAt: "2026-11-14T11:30:00+01:00",
   durationHours: 24,

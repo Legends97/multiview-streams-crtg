@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { SponsorRow } from "@/components/layout/sponsor-row";
@@ -14,6 +15,15 @@ export function SiteFooter() {
 
         <div className="flex flex-col gap-8 border-t border-border pt-8 md:flex-row md:justify-between">
           <div className="max-w-sm">
+            {race.team.logo ? (
+              <Image
+                src={race.team.logo}
+                alt={race.team.name}
+                width={493}
+                height={400}
+                className="mb-3 h-14 w-auto"
+              />
+            ) : null}
             <p className="font-display text-lg font-semibold uppercase">{race.team.name}</p>
             <p className="mt-2 text-sm text-muted">{event.subtitle}</p>
             <p className="mt-1 text-xs text-subtle">

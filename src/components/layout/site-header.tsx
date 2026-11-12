@@ -1,4 +1,5 @@
 import { Eye } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { MobileNav } from "@/components/layout/mobile-nav";
@@ -30,16 +31,29 @@ export function SiteHeader({ status, viewers = null, user = null, userMenu }: Si
       <div className="mx-auto flex h-16 max-w-[1920px] items-center gap-3 px-4 lg:gap-6 lg:px-6">
         {/* Team-Marke */}
         <Link href="/" className="flex min-w-0 items-center gap-3 rounded-sm">
-          <span
-            aria-hidden="true"
-            className="flex size-9 shrink-0 items-center justify-center rounded-sm bg-accent font-display text-base font-bold leading-none tracking-tight text-foreground"
-          >
-            {race.team.carNumber ?? initials(race.team.name)}
-          </span>
-          <span className="flex min-w-0 flex-col leading-tight">
-            <span className="truncate font-display text-base font-semibold uppercase tracking-wide">
-              {race.team.name}
+          {race.team.logo ? (
+            <Image
+              src={race.team.logo}
+              alt={race.team.name}
+              width={493}
+              height={400}
+              priority
+              className="h-10 w-auto shrink-0"
+            />
+          ) : (
+            <span
+              aria-hidden="true"
+              className="flex size-9 shrink-0 items-center justify-center rounded-sm bg-accent font-display text-base font-bold leading-none tracking-tight text-foreground"
+            >
+              {race.team.carNumber ?? initials(race.team.name)}
             </span>
+          )}
+          <span className="flex min-w-0 flex-col leading-tight">
+            {race.team.logo ? null : (
+              <span className="truncate font-display text-base font-semibold uppercase tracking-wide">
+                {race.team.name}
+              </span>
+            )}
             <span className="hidden truncate text-[11px] uppercase tracking-widest text-muted sm:block">
               {event.title}
             </span>

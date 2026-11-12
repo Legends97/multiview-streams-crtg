@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { event } from "@/config/event";
@@ -11,16 +12,28 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <header className="border-b border-border bg-surface">
         <div className="mx-auto flex h-16 max-w-md items-center px-4">
           <Link href="/" className="flex min-w-0 items-center gap-3 rounded-sm">
-            <span
-              aria-hidden="true"
-              className="flex size-9 shrink-0 items-center justify-center rounded-sm bg-accent font-display text-base font-bold leading-none tracking-tight"
-            >
-              {race.team.carNumber ?? initials(race.team.name)}
-            </span>
-            <span className="flex min-w-0 flex-col leading-tight">
-              <span className="truncate font-display text-base font-semibold uppercase tracking-wide">
-                {race.team.name}
+            {race.team.logo ? (
+              <Image
+                src={race.team.logo}
+                alt={race.team.name}
+                width={493}
+                height={400}
+                className="h-10 w-auto shrink-0"
+              />
+            ) : (
+              <span
+                aria-hidden="true"
+                className="flex size-9 shrink-0 items-center justify-center rounded-sm bg-accent font-display text-base font-bold leading-none tracking-tight"
+              >
+                {race.team.carNumber ?? initials(race.team.name)}
               </span>
+            )}
+            <span className="flex min-w-0 flex-col leading-tight">
+              {race.team.logo ? null : (
+                <span className="truncate font-display text-base font-semibold uppercase tracking-wide">
+                  {race.team.name}
+                </span>
+              )}
               <span className="text-[11px] uppercase tracking-widest text-muted">
                 {event.title}
               </span>
