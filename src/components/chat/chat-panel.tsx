@@ -76,9 +76,8 @@ export function ChatPanel({ streams, communityChat, className }: ChatPanelProps)
       <div className="flex shrink-0 items-start gap-2 border-t border-border bg-surface px-3 py-2">
         <Info className="mt-0.5 size-3.5 shrink-0 text-subtle" aria-hidden="true" />
         <p className="text-[11px] leading-snug text-subtle">
-          Zum Schreiben ist eine Twitch-Anmeldung im Chat-Fenster nötig. Bleibt ein
-          Fenster leer, blockiert dein Browser Drittanbieter-Cookies — dann hilft der
-          Knopf oben rechts an jedem Chat.
+          Schreiben geht über „Schreiben“ am jeweiligen Chat: Twitch lässt das nur im
+          eigenen Fenster zu, nicht im eingebetteten. Dort bist du bereits angemeldet.
         </p>
       </div>
     </div>

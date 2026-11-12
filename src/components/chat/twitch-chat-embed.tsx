@@ -47,15 +47,16 @@ export function TwitchChatEmbed({
         <p className="flex-1 truncate text-xs font-medium uppercase tracking-wide text-muted">
           {channelLabel ?? channel}
         </p>
-        <Button asChild variant="ghost" size="icon-sm" className="shrink-0">
+        <Button asChild variant="secondary" size="sm" className="h-7 shrink-0 px-2 text-xs">
           <a
             href={buildChatPopoutUrl(channel)}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Chat von ${channelLabel ?? channel} in eigenem Fenster öffnen`}
-            title="In eigenem Fenster öffnen"
+            aria-label={`Chat von ${channelLabel ?? channel} zum Schreiben in eigenem Fenster öffnen`}
+            title="Twitch erlaubt das Schreiben nur im eigenen Fenster"
           >
             <ExternalLink />
+            Schreiben
           </a>
         </Button>
       </div>
