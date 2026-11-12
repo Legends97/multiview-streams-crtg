@@ -16,6 +16,11 @@ import { cn } from "@/lib/utils/cn";
  *
  * `key` am iframe ist entscheidend: ohne Remount behält das iframe den
  * alten Kanal (docs/06-twitch-embed.md, Abschnitt 5).
+ *
+ * BEWUSST OHNE `sandbox`: Twitch dokumentiert das Chat-Embed ohne Sandbox.
+ * Mit Sandbox erkennt der Chat die Twitch-Anmeldung des Zuschauers nicht
+ * zuverlässig, und das Eingabefeld bleibt wirkungslos. Die Quelle ist fest
+ * auf twitch.tv verdrahtet, nicht konfigurierbar.
  */
 export function TwitchChatEmbed({
   channel,
@@ -66,10 +71,6 @@ export function TwitchChatEmbed({
         src={src}
         title={`Twitch-Chat von ${channelLabel ?? channel}`}
         className="min-h-0 w-full flex-1 border-0"
-        // Dieselben Freigaben, die der offizielle Twitch-Player fuer sein
-        // eigenes iframe setzt. Ohne allow-storage-access-by-user-activation
-        // bleibt der Chat leer, sobald Drittanbieter-Cookies blockiert sind.
-        sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation"
       />
     </div>
   );
