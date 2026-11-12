@@ -36,17 +36,14 @@ const rawEvent: EventConfig = {
     { label: "Rennstart", at: "2026-11-14T11:30:00+01:00" },
     { label: "Zielflagge", at: "2026-11-15T11:30:00+01:00" },
   ],
-  social: [
-    { platform: "twitch", label: "Team-Twitch", url: "https://twitch.tv/replace_me" },
-    { platform: "youtube", label: "YouTube", url: "https://youtube.com/@replace-me" },
-    { platform: "instagram", label: "Instagram", url: "https://instagram.com/replace-me" },
-    { platform: "discord", label: "Discord", url: "https://discord.gg/replace-me" },
-  ],
-  sponsors: [
-    { name: "Sponsor 1", logo: "/sponsors/sponsor-1.svg", tier: "main" },
-    { name: "Sponsor 2", logo: "/sponsors/sponsor-2.svg", tier: "partner" },
-    { name: "Sponsor 3", logo: "/sponsors/sponsor-3.svg", tier: "partner" },
-  ],
+  // Leer = der Bereich "Folgen" erscheint weder im Footer noch auf der
+  // Event-Seite. Zum Aktivieren echte Links eintragen, z. B.
+  // { platform: "discord", label: "Discord", url: "https://discord.gg/..." }
+  social: [],
+  // Leer = der Sponsorenbereich erscheint weder im Footer noch auf der
+  // Event-Seite. Zum Aktivieren Logos nach public/sponsors/ legen und hier
+  // eintragen: { name, logo: "/sponsors/datei.svg", tier: "main" | "partner" }
+  sponsors: [],
 };
 
 export const event: EventConfig = parseConfig(
