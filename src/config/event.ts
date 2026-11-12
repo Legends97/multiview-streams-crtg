@@ -1,0 +1,56 @@
+import { eventConfigSchema, parseConfig } from "@/lib/validation/config";
+import type { EventConfig } from "@/types/event";
+
+/**
+ * EVENT-KONFIGURATION
+ * ===================
+ * Texte, Zeitplan, Social-Media-Links und Sponsoren der Event-Seite.
+ *
+ * PLATZHALTERTEXTE UND -LINKS — vor dem Event ersetzen.
+ * Sponsorenlogos nach public/sponsors/ legen, Pfade hier eintragen.
+ */
+const rawEvent: EventConfig = {
+  title: "24H RACE LIVE",
+  subtitle: "Unser Team bei den 24 Stunden der Nordschleife",
+  description:
+    "24 Stunden Nordschleife: alle Onboard-Perspektiven unseres Teams gleichzeitig. Wechsle jederzeit den Blickwinkel und bleib im Chat mit der Community in Verbindung.",
+  teamDescription:
+    "Wir fahren die 24 Stunden der Nordschleife bei ACM Racing. Gefahren wird in Assetto Corsa Competizione, bei wechselndem Wetter, ohne Pflicht-Boxenstopps und mit einem Stint-Timer von 65 Minuten. Vorbereitung, Fahrerwechsel und Strategie laufen bei uns wie im echten Motorsport: geplant, abgesprochen und rund um die Uhr besetzt.",
+  // Eckdaten laut Ausschreibung des Veranstalters.
+  facts: [
+    { label: "Simulator", value: "Assetto Corsa Competizione" },
+    { label: "Renndauer", value: "24 Stunden" },
+    { label: "Strecke", value: "Nürburgring Nordschleife, 25,378 km" },
+    { label: "Format", value: "Multiklasse, bis zu 70 Startplätze" },
+    { label: "Boxenstopps", value: "Keine Pflichtstopps" },
+    { label: "Stint-Timer", value: "65 Minuten" },
+    { label: "Wetter", value: "Wechselhaft" },
+    { label: "Fahrer pro Team", value: "1 bis 6" },
+  ],
+
+  // Zeiten in MEZ (+01:00). Dauer in Minuten, wo bekannt.
+  schedule: [
+    { label: "Freies Training", at: "2026-11-14T10:00:00+01:00", durationMinutes: 50 },
+    { label: "Fahrerbriefing", at: "2026-11-14T10:50:00+01:00", durationMinutes: 10 },
+    { label: "Qualifying", at: "2026-11-14T11:00:00+01:00", durationMinutes: 25 },
+    { label: "Rennstart", at: "2026-11-14T11:30:00+01:00" },
+    { label: "Zielflagge", at: "2026-11-15T11:30:00+01:00" },
+  ],
+  social: [
+    { platform: "twitch", label: "Team-Twitch", url: "https://twitch.tv/replace_me" },
+    { platform: "youtube", label: "YouTube", url: "https://youtube.com/@replace-me" },
+    { platform: "instagram", label: "Instagram", url: "https://instagram.com/replace-me" },
+    { platform: "discord", label: "Discord", url: "https://discord.gg/replace-me" },
+  ],
+  sponsors: [
+    { name: "Sponsor 1", logo: "/sponsors/sponsor-1.svg", tier: "main" },
+    { name: "Sponsor 2", logo: "/sponsors/sponsor-2.svg", tier: "partner" },
+    { name: "Sponsor 3", logo: "/sponsors/sponsor-3.svg", tier: "partner" },
+  ],
+};
+
+export const event: EventConfig = parseConfig(
+  eventConfigSchema,
+  rawEvent,
+  "src/config/event.ts",
+);

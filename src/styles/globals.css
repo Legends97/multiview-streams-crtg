@@ -1,0 +1,198 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+ * Design-Tokens — einzige Quelle für Farben, Radien, Schatten und Schriften.
+ * Siehe docs/03-design-system.md. Komponenten verwenden ausschließlich die
+ * daraus generierten Utilities (bg-card, text-muted, border-border, ...).
+ * ------------------------------------------------------------------------- */
+@theme {
+  /* Flächen */
+  --color-background: #080a0f;
+  --color-surface: #10141c;
+  --color-card: #171c26;
+  --color-card-hover: #1c222e;
+  --color-border: #252b36;
+  --color-border-strong: #333b49;
+
+  /* Text */
+  --color-foreground: #ffffff;
+  --color-muted: #9299a8;
+  --color-subtle: #4b5565;
+
+  /* Akzent */
+  --color-accent: #e10600;
+  --color-accent-hover: #c20500;
+  --color-accent-soft: #e1060014;
+
+  /* Status */
+  --color-warning: #f5c518;
+  --color-success: #22c55e;
+  --color-info: #3b82f6;
+
+  /* Overlay */
+  --color-overlay: #080a0fb8;
+
+  /* Schriften */
+  --font-display: var(--font-barlow), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Radien */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  /* Schatten — nur für schwebende Ebenen */
+  --shadow-float: 0 8px 24px rgb(0 0 0 / 0.45);
+  --shadow-tile: 0 2px 8px rgb(0 0 0 / 0.3);
+
+  /* Animation */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Dezente Ein- und Ausblendungen für Radix-Overlays */
+  --animate-fade-in: fade-in 160ms var(--ease-standard);
+  --animate-fade-out: fade-out 120ms var(--ease-standard);
+  --animate-pop-in: pop-in 160ms var(--ease-standard);
+  --animate-pop-out: pop-out 120ms var(--ease-standard);
+  --animate-live-pulse: live-pulse 2s var(--ease-standard) infinite;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: scale(0.97) translateY(-2px);
+    }
+  }
+
+  @keyframes pop-out {
+    to {
+      opacity: 0;
+      transform: scale(0.97) translateY(-2px);
+    }
+  }
+
+  @keyframes live-pulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.45;
+      transform: scale(0.82);
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Basis
+ * ------------------------------------------------------------------------- */
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    color-scheme: dark;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Sichtbarer Fokus, einheitlich über die gesamte Anwendung */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-foreground);
+  }
+
+  /* Überschriften nutzen die Display-Schrift */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+
+  /* Dezente, dunkle Scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-strong) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--color-border-strong);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Hilfsklassen
+ * ------------------------------------------------------------------------- */
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Glassmorphism — ausschließlich für Overlays über Video */
+@utility glass {
+  background-color: color-mix(in srgb, var(--color-background) 72%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+/* ---------------------------------------------------------------------------
+ * Theater Mode: Header und Footer ausblenden, Arbeitsfläche auf volle Höhe.
+ * Gesetzt von LiveWorkspace über data-theater am body.
+ * ------------------------------------------------------------------------- */
+body[data-theater="true"] [data-chrome] {
+  display: none;
+}
+
+body[data-theater="true"] [data-workspace] {
+  height: 100dvh;
+}
+
+/* ---------------------------------------------------------------------------
+ * Bewegung reduzieren
+ * ------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
