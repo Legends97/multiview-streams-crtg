@@ -1,0 +1,37 @@
+{
+  "app": {
+    "[project]/src/app/(main)/event/page": [
+      "static/media/07c7676b89ed2778-s.p.2bn3s6zvc0dyp.woff2",
+      "static/media/1c4e9d4328a7e0f9-s.p.0xf8lnqelv8sb.woff2",
+      "static/media/066ba92c8fc1c222-s.p.3lj349bs9hfu1.woff2",
+      "static/media/2da4f60ed3b00b11-s.p.0xxdg0o7uh536.woff2"
+    ],
+    "[project]/src/app/(main)/live/page": [
+      "static/media/07c7676b89ed2778-s.p.2bn3s6zvc0dyp.woff2",
+      "static/media/1c4e9d4328a7e0f9-s.p.0xf8lnqelv8sb.woff2",
+      "static/media/066ba92c8fc1c222-s.p.3lj349bs9hfu1.woff2",
+      "static/media/2da4f60ed3b00b11-s.p.0xxdg0o7uh536.woff2"
+    ],
+    "[project]/src/app/(main)/page": [
+      "static/media/07c7676b89ed2778-s.p.2bn3s6zvc0dyp.woff2",
+      "static/media/1c4e9d4328a7e0f9-s.p.0xf8lnqelv8sb.woff2",
+      "static/media/066ba92c8fc1c222-s.p.3lj349bs9hfu1.woff2",
+      "static/media/2da4f60ed3b00b11-s.p.0xxdg0o7uh536.woff2"
+    ],
+    "[project]/src/app/(main)/race/page": [
+      "static/media/07c7676b89ed2778-s.p.2bn3s6zvc0dyp.woff2",
+      "static/media/1c4e9d4328a7e0f9-s.p.0xf8lnqelv8sb.woff2",
+      "static/media/066ba92c8fc1c222-s.p.3lj349bs9hfu1.woff2",
+      "static/media/2da4f60ed3b00b11-s.p.0xxdg0o7uh536.woff2"
+    ],
+    "[project]/src/app/_not-found/page": [
+      "static/media/07c7676b89ed2778-s.p.2bn3s6zvc0dyp.woff2",
+      "static/media/1c4e9d4328a7e0f9-s.p.0xf8lnqelv8sb.woff2",
+      "static/media/066ba92c8fc1c222-s.p.3lj349bs9hfu1.woff2",
+      "static/media/2da4f60ed3b00b11-s.p.0xxdg0o7uh536.woff2"
+    ]
+  },
+  "appUsingSizeAdjust": true,
+  "pages": {},
+  "pagesUsingSizeAdjust": false
+}
