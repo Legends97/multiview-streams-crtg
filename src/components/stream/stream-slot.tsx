@@ -1,7 +1,7 @@
 "use client";
 
 import { AlertCircle, Plus, RefreshCw, WifiOff } from "lucide-react";
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 
 import { StreamOverlay } from "@/components/stream/stream-overlay";
 import { TwitchPlayer } from "@/components/stream/twitch-player";
@@ -18,6 +18,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useLazyMount } from "@/hooks/use-lazy-mount";
 import { cn } from "@/lib/utils/cn";
 import type { StreamConfig, StreamStatus } from "@/types/stream";
+
+/**
+ * Wartezeit, bis eine Kachel ohne Rückmeldung als haengend gilt.
+ *
+ * Twitch meldet fuer Kanaele, die nicht senden, haeufig gar kein Ereignis —
+ * die Kachel wuerde sonst dauerhaft "wird geladen" anzeigen.
+ */
+const LOADING_TIMEOUT_MS = 15_000;
 
 export interface StreamSlotProps {
   slotIndex: number;
@@ -67,10 +75,22 @@ function StreamSlotComponent({
 }: StreamSlotProps) {
   const [playerStatus, setPlayerStatus] = useState<StreamStatus>("unknown");
   const [reloadKey, setReloadKey] = useState(0);
+  // Kachel haengt im Ladezustand fest, ohne dass Twitch etwas meldet.
+  const [stalled, setStalled] = useState(false);
   const { ref, mounted } = useLazyMount<HTMLDivElement>({ keepMounted: isFocused });
 
   const handleStatusChange = useCallback((next: StreamStatus) => {
     setPlayerStatus(next);
+
+    // Sobald eine eindeutige Rueckmeldung kommt, ist die Kachel nicht mehr
+    // haengend — auch wenn der Stream erst nach der Wartezeit startet.
+    if (next !== "loading" && next !== "unknown") setStalled(false);
+  }, []);
+
+  const retry = useCallback(() => {
+    setStalled(false);
+    setPlayerStatus("loading");
+    setReloadKey((key) => key + 1);
   }, []);
 
   const status: StreamStatus =
@@ -79,6 +99,17 @@ function StreamSlotComponent({
       : playerStatus === "unknown" && externalStatus
         ? externalStatus
         : playerStatus;
+
+  const waiting = status === "loading" || status === "unknown";
+
+  // Wartezeit starten, solange die Kachel montiert ist und nichts meldet.
+  useEffect(() => {
+    if (!mounted || !waiting || stalled) return;
+
+    const timer = window.setTimeout(() => setStalled(true), LOADING_TIMEOUT_MS);
+
+    return () => window.clearTimeout(timer);
+  }, [mounted, waiting, stalled, reloadKey]);
 
   // Leerer Slot: Auswahl anbieten, nichts laden.
   if (!stream) {
@@ -114,6 +145,7 @@ function StreamSlotComponent({
   }
 
   const showPlayer = mounted && status !== "offline" && status !== "not_found";
+  const showStalled = showPlayer && stalled;
 
   return (
     <div
@@ -153,7 +185,7 @@ function StreamSlotComponent({
       ) : null}
 
       {/* Ladezustand */}
-      {mounted && status === "loading" ? (
+      {mounted && status === "loading" && !stalled ? (
         <div className="absolute inset-0 flex items-center justify-center bg-surface">
           <Skeleton className="size-full" />
           <p className="absolute text-xs uppercase tracking-wide text-muted">
@@ -173,14 +205,19 @@ function StreamSlotComponent({
               : `Der Kanal "${stream.twitchChannel}" existiert nicht. Eintrag in src/config/streams.ts prüfen.`
           }
           actionLabel={status === "offline" ? "Erneut versuchen" : undefined}
-          onAction={
-            status === "offline"
-              ? () => {
-                  setPlayerStatus("loading");
-                  setReloadKey((key) => key + 1);
-                }
-              : undefined
-          }
+          onAction={status === "offline" ? retry : undefined}
+        />
+      ) : null}
+
+      {/* Keine Rueckmeldung innerhalb der Wartezeit. Der Player bleibt im
+          Hintergrund montiert: startet der Stream doch noch, uebernimmt er. */}
+      {showStalled ? (
+        <SlotFallback
+          icon={<WifiOff className="size-6 text-muted" />}
+          title="Keine Rückmeldung"
+          hint={`${stream.name} sendet vermutlich nicht. Läuft der Stream doch, erscheint er automatisch.`}
+          actionLabel="Erneut versuchen"
+          onAction={retry}
         />
       ) : null}
 
