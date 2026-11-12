@@ -184,8 +184,18 @@ Hinweise:
   Sandbox erkennt der Chat die Twitch-Anmeldung des Zuschauers nicht zuverlässig und
   das Eingabefeld bleibt wirkungslos. Die Quelle ist fest auf twitch.tv verdrahtet und
   nicht konfigurierbar, deshalb ist das vertretbar
-- Schreiben setzt voraus, dass der Zuschauer bei Twitch angemeldet ist und sein Browser
-  Cookies von twitch.tv zulässt
+- Schreiben im eingebetteten Fenster setzt voraus, dass der Zuschauer bei Twitch
+  angemeldet ist **und** sein Browser Cookies von twitch.tv in fremden Seiten zulässt.
+  Viele Browser tun das nicht mehr; das Eingabefeld dort bleibt dann wirkungslos, ohne
+  jede Meldung
+- Deshalb gibt es ein **eigenes Eingabefeld** unter jedem Chat
+  (`twitch-chat-composer.tsx`). Der Zuschauer meldet sich einmal über den Implicit Grant
+  Flow bei Twitch an (`src/lib/twitch/auth.ts`, Rückleitung `/auth/twitch`), danach geht
+  die Nachricht über `POST helix/chat/messages` in seinem Namen raus
+  (`src/lib/twitch/chat-api.ts`, Scope `user:write:chat`). Das ist unabhängig von
+  Cookie-Einstellungen, weil die Anmeldung erstseitig ist
+- Ohne `NEXT_PUBLIC_TWITCH_CLIENT_ID` entfällt das Feld ersatzlos; der Knopf „Schreiben“
+  bleibt als Rückfallebene
 - Als Rückfallebene steht unter dem Chat ein Knopf "Chat in eigenem Fenster öffnen"
   (`buildChatPopoutUrl`). Dort gelten die Embed-Beschränkungen nicht, Lesen und Schreiben
   funktionieren auch bei strengen Cookie-Einstellungen

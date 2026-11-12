@@ -11,6 +11,7 @@ gemeinsam aktualisiert.
 | --- | --- | --- | --- |
 | `NEXT_PUBLIC_SITE_URL` | Client + Server | **ja** | `https://24h.mein-team.de` |
 | `NEXT_PUBLIC_TWITCH_PARENTS` | Client + Server | **ja** | `localhost,24h.mein-team.de` |
+| `NEXT_PUBLIC_TWITCH_CLIENT_ID` | Client + Server | nein | `abcd1234efgh5678ijkl` |
 | `NEXT_PUBLIC_SUPABASE_URL` | Client + Server | nein | `https://abcdefghijkl.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Client + Server | nein | `eyJhbGciOi…` |
 | `SUPABASE_SERVICE_ROLE_KEY` | **nur Server** | nein | `eyJhbGciOi…` |
@@ -29,6 +30,25 @@ dieses Prefix bleibt serverseitig.
 ---
 
 ## 2. Beschreibung
+
+### `NEXT_PUBLIC_TWITCH_CLIENT_ID`
+Client-ID einer Twitch-Anwendung aus <https://dev.twitch.tv/console/apps>. Erlaubt den
+Zuschauern, sich auf der Seite bei Twitch anzumelden und **direkt im eingeblendeten Chat
+zu schreiben** — das Eingabefeld im eingebetteten Twitch-Fenster bleibt wirkungslos,
+sobald der Browser Cookies von twitch.tv in fremden Seiten blockiert.
+
+Die Client-ID ist öffentlich und kein Geheimnis; deshalb das `NEXT_PUBLIC_`-Prefix. Das
+**Client Secret wird nicht verwendet** und gehört nicht in diese Variable.
+
+In der Twitch-Konsole muss als OAuth Redirect URL exakt eingetragen sein:
+
+```
+https://<deine-domain>/auth/twitch
+http://localhost:3000/auth/twitch
+```
+
+Fehlt die Variable, entfällt das eigene Eingabefeld und es bleibt beim Lesen plus dem
+Knopf „Schreiben“, der den Chat im eigenen Fenster öffnet.
 
 ### `NEXT_PUBLIC_SUPABASE_URL`
 URL des Supabase-Projekts. Dashboard → **Project Settings → API → Project URL**. Ohne

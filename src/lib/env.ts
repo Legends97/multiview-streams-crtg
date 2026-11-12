@@ -19,6 +19,10 @@ const clientSchema = z.object({
   NEXT_PUBLIC_TWITCH_PARENTS: z
     .string()
     .min(1, "NEXT_PUBLIC_TWITCH_PARENTS fehlt (mindestens localhost)"),
+  NEXT_PUBLIC_TWITCH_CLIENT_ID: z
+    .string()
+    .min(10, "NEXT_PUBLIC_TWITCH_CLIENT_ID ist zu kurz")
+    .optional(),
   NEXT_PUBLIC_SUPABASE_URL: z
     .url("NEXT_PUBLIC_SUPABASE_URL muss eine URL sein")
     .optional(),
@@ -31,6 +35,7 @@ const clientSchema = z.object({
 const parsed = clientSchema.safeParse({
   NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
   NEXT_PUBLIC_TWITCH_PARENTS: process.env.NEXT_PUBLIC_TWITCH_PARENTS,
+  NEXT_PUBLIC_TWITCH_CLIENT_ID: process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID || undefined,
   NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL || undefined,
   NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || undefined,
 });
@@ -46,6 +51,29 @@ export const env = parsed.data;
 
 /** Basis-URL ohne Slash am Ende, für Redirects und Metadaten. */
 export const siteUrl = env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
+
+/**
+ * Ist die Twitch-Anwendung hinterlegt? Steuert, ob Zuschauer sich bei
+ * Twitch anmelden und direkt auf der Seite in den Chat schreiben koennen.
+ * Die Client-ID ist oeffentlich, kein Geheimnis.
+ */
+export function hasTwitchClientId(): boolean {
+  return Boolean(env.NEXT_PUBLIC_TWITCH_CLIENT_ID);
+}
+
+/** Client-ID oder ein klarer Fehler. Aufrufer pruefen vorher. */
+export function requireTwitchClientId(): string {
+  const clientId = env.NEXT_PUBLIC_TWITCH_CLIENT_ID;
+
+  if (!clientId) {
+    throw new Error(
+      "Twitch-Anmeldung ist nicht konfiguriert: NEXT_PUBLIC_TWITCH_CLIENT_ID fehlt. " +
+        "Siehe docs/11-umgebungsvariablen.md",
+    );
+  }
+
+  return clientId;
+}
 
 /**
  * Ist Supabase konfiguriert? Steuert, ob Anmeldung, Community-Chat und

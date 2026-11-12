@@ -3,6 +3,7 @@
 import { ExternalLink } from "lucide-react";
 import { useMemo } from "react";
 
+import { TwitchChatComposer } from "@/components/chat/twitch-chat-composer";
 import { Button } from "@/components/ui/button";
 import {
   buildChatEmbedUrl,
@@ -72,6 +73,8 @@ export function TwitchChatEmbed({
         title={`Twitch-Chat von ${channelLabel ?? channel}`}
         className="min-h-0 w-full flex-1 border-0"
       />
+
+      <TwitchChatComposer channel={channel} />
     </div>
   );
 }
