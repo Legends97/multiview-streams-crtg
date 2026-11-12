@@ -71,6 +71,9 @@ export default function HomePage() {
                 </li>
               ))}
             </ol>
+            <p className="mt-4 text-xs text-subtle">
+              Alle Zeiten in mitteleuropäischer Zeit.
+            </p>
           </div>
         </section>
       ) : null}

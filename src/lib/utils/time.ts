@@ -91,10 +91,17 @@ export function formatCountdown(ms: number): string {
 }
 
 /**
- * Datum und Uhrzeit in deutscher Schreibweise.
- * Zeitzone bleibt die des Browsers bzw. Servers; die Eingabe trägt einen
- * Offset, daher ist das Ergebnis eindeutig.
+ * Zeitzone des Events. Fest verdrahtet, und zwar aus zwei Gruenden:
+ *
+ * 1. Server-Rendering: Vercel laeuft in UTC. Ohne feste Zeitzone gibt der
+ *    Server deutsche Zeiten eine Stunde zu frueh aus.
+ * 2. Zuschauer im Ausland sollen die offizielle Rennzeit sehen, nicht ihre
+ *    eigene Ortszeit — sonst stimmt der Zeitplan fuer sie nicht mit dem
+ *    ueberein, was im Stream und im Teamfunk gesagt wird.
  */
+export const EVENT_TIME_ZONE = "Europe/Berlin";
+
+/** Datum und Uhrzeit in deutscher Schreibweise, in deutscher Zeit. */
 export function formatDateTime(iso: string): string {
   return new Intl.DateTimeFormat("de-DE", {
     weekday: "short",
@@ -102,6 +109,7 @@ export function formatDateTime(iso: string): string {
     month: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
+    timeZone: EVENT_TIME_ZONE,
   }).format(new Date(iso));
 }
 
@@ -109,6 +117,7 @@ export function formatTime(iso: string): string {
   return new Intl.DateTimeFormat("de-DE", {
     hour: "2-digit",
     minute: "2-digit",
+    timeZone: EVENT_TIME_ZONE,
   }).format(new Date(iso));
 }
 
