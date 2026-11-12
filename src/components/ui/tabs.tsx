@@ -32,7 +32,7 @@ export function TabsTrigger({
         "inline-flex h-8 items-center justify-center gap-1.5 rounded-sm px-3 text-xs font-medium uppercase tracking-wide",
         "text-muted transition-colors duration-[120ms] ease-[var(--ease-standard)]",
         "hover:text-foreground",
-        "data-[state=active]:bg-accent-soft data-[state=active]:text-accent",
+        "data-[state=active]:bg-accent-soft data-[state=active]:text-foreground",
         "disabled:pointer-events-none disabled:opacity-50",
         className,
       )}

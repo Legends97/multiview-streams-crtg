@@ -30,7 +30,7 @@ export function HeroBanner({
       {/* Dezente Fläche, kein Glow */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(225,6,0,0.10),transparent_60%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,60,109,0.45),transparent_62%),radial-gradient(ellipse_at_bottom_left,rgba(58,9,96,0.4),transparent_58%)]"
       />
 
       <div className="relative mx-auto max-w-[1920px] px-4 py-14 lg:px-6 lg:py-20">

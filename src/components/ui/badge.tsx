@@ -9,8 +9,10 @@ const badgeVariants = cva(
     variants: {
       variant: {
         neutral: "bg-card text-muted border border-border",
-        accent: "bg-accent text-foreground",
-        accentSoft: "bg-accent-soft text-accent border border-accent/30",
+        accent: "bg-accent text-foreground border border-white/15",
+        accentSoft: "bg-accent-soft text-foreground border border-accent",
+        purple: "bg-purple-soft text-foreground border border-purple",
+        danger: "bg-danger text-foreground",
         warning: "bg-warning text-background",
         success: "bg-success/15 text-success border border-success/30",
         muted: "bg-surface text-subtle border border-border",

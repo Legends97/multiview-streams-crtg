@@ -63,7 +63,7 @@ export function StreamOverlay({
         <div className="min-w-0">
           <p className="truncate font-display text-sm font-semibold uppercase leading-tight">
             {stream.carNumber ? (
-              <span className="text-accent">#{stream.carNumber} </span>
+              <span className="text-foreground/70">#{stream.carNumber} </span>
             ) : null}
             {stream.name}
           </p>
@@ -139,7 +139,7 @@ export function StreamOverlay({
                 <DropdownMenuItem
                   key={candidate.id}
                   onSelect={() => onAssign(candidate.id)}
-                  className={cn(candidate.id === stream.id && "text-accent")}
+                  className={cn(candidate.id === stream.id && "font-medium")}
                 >
                   <span className="flex-1">{candidate.name}</span>
                   <span className="text-xs text-subtle">

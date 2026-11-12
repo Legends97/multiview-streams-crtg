@@ -130,7 +130,7 @@ export default function RacePage() {
               <li key={`${entry.label}-${entry.at}`}>
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-sm text-accent">{entry.label}</CardTitle>
+                    <CardTitle className="text-sm text-foreground">{entry.label}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="tabular font-mono text-sm">{formatDateTime(entry.at)}</p>

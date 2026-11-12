@@ -85,7 +85,7 @@ export function StreamToolbar({
             className={cn(
               "tabular flex h-7 min-w-8 items-center justify-center gap-1 rounded-sm px-2 text-xs font-medium transition-colors",
               preset.id === layoutId && maximizedSlot === null
-                ? "bg-accent-soft text-accent"
+                ? "bg-accent-soft text-foreground"
                 : "text-muted hover:bg-card-hover hover:text-foreground",
             )}
           >
@@ -159,7 +159,7 @@ export function StreamToolbar({
               <dl className="grid gap-2">
                 {SHORTCUTS.map((shortcut) => (
                   <div key={shortcut.keys} className="flex items-center gap-4">
-                    <dt className="w-20 shrink-0 font-mono text-xs uppercase text-accent">
+                    <dt className="w-20 shrink-0 font-mono text-xs uppercase text-foreground">
                       {shortcut.keys}
                     </dt>
                     <dd className="text-sm text-muted">{shortcut.description}</dd>

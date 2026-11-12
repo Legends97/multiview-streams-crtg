@@ -133,7 +133,7 @@ function StreamSlotComponent({
         <ErrorBoundary
           fallback={(_error, reset) => (
             <SlotFallback
-              icon={<AlertCircle className="size-6 text-accent" />}
+              icon={<AlertCircle className="size-6 text-danger" />}
               title="Player-Fehler"
               hint="Die Wiedergabe wurde unterbrochen."
               actionLabel="Neu laden"

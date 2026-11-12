@@ -19,10 +19,23 @@
   --color-muted: #9299a8;
   --color-subtle: #4b5565;
 
-  /* Akzent */
-  --color-accent: #e10600;
-  --color-accent-hover: #c20500;
-  --color-accent-soft: #e1060014;
+  /* Akzent — Farben aus dem Teamlogo */
+  --color-accent: #003c6d;
+  --color-accent-hover: #004f8f;
+  --color-accent-soft: #003c6d59;
+  --color-purple: #3a0960;
+  --color-purple-hover: #4d0c80;
+  --color-purple-soft: #3a096059;
+
+  /*
+   * Fokusring: ein hellerer Blauton aus dem Logo. Das dunkle Logo-Blau
+   * hat auf dem Seitenhintergrund nur 1,76:1 Kontrast und waere als
+   * Tastatur-Fokus nicht erkennbar.
+   */
+  --color-focus: #2f8fd6;
+
+  /* Nur fuer die Rote Flagge und Fehlerzustaende — keine Markenfarbe. */
+  --color-danger: #e10600;
 
   /* Status */
   --color-warning: #f5c518;
@@ -118,12 +131,12 @@
 
   /* Sichtbarer Fokus, einheitlich über die gesamte Anwendung */
   :focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
   }
 
   ::selection {
-    background-color: var(--color-accent);
+    background-color: var(--color-accent-hover);
     color: var(--color-foreground);
   }
 

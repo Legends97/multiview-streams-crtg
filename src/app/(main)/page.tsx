@@ -59,7 +59,7 @@ export default function HomePage() {
                   key={`${entry.label}-${entry.at}`}
                   className="rounded-md border border-border bg-card p-4"
                 >
-                  <p className="text-xs font-medium uppercase tracking-wide text-accent">
+                  <p className="text-xs font-medium uppercase tracking-wide text-foreground">
                     {entry.label}
                   </p>
                   <p className="tabular mt-1 font-mono text-sm">{formatDateTime(entry.at)}</p>

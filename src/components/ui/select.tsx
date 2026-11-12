@@ -76,7 +76,7 @@ export function SelectItem({
     >
       <span className="absolute left-2.5 flex size-3.5 items-center justify-center">
         <SelectPrimitive.ItemIndicator>
-          <Check className="size-3.5 text-accent" />
+          <Check className="size-3.5 text-foreground" />
         </SelectPrimitive.ItemIndicator>
       </span>
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>

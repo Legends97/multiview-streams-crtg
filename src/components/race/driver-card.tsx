@@ -64,7 +64,7 @@ export function DriverCard({
           <p className="text-sm text-muted">{stream.car}</p>
         ) : null}
 
-        <p className="text-xs font-medium uppercase tracking-wide text-accent">
+        <p className="text-xs font-medium uppercase tracking-wide text-foreground">
           {stream.carClass ?? stream.role}
         </p>
 

@@ -51,7 +51,7 @@ export function MobileNav() {
                 href={item.href}
                 className={cn(
                   "flex items-start gap-3 rounded-sm px-3 py-3 transition-colors",
-                  isActive ? "bg-accent-soft text-accent" : "text-foreground hover:bg-card-hover",
+                  isActive ? "bg-accent-soft text-foreground" : "text-foreground hover:bg-card-hover",
                 )}
               >
                 <Icon className="mt-0.5 size-4 shrink-0" aria-hidden="true" />

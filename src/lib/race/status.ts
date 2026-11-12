@@ -3,7 +3,7 @@ import type { LucideIcon } from "lucide-react";
 
 import type { RaceStatus } from "@/types/race";
 
-type BadgeVariant = "neutral" | "accent" | "warning" | "muted" | "accentSoft";
+type BadgeVariant = "neutral" | "accent" | "warning" | "muted" | "accentSoft" | "danger";
 
 export interface RaceStatusMeta {
   label: string;
@@ -56,7 +56,8 @@ export const RACE_STATUS_META: Record<RaceStatus, RaceStatusMeta> = {
   RED_FLAG: {
     label: "Rote Flagge",
     short: "RED FLAG",
-    variant: "accentSoft",
+    // Rot bleibt rot: das ist die Flaggenfarbe, keine Markenfarbe.
+    variant: "danger",
     icon: OctagonAlert,
     live: true,
     description: "Rennen unterbrochen.",

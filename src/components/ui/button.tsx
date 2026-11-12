@@ -9,12 +9,14 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-accent text-foreground hover:bg-accent-hover",
+        // Feine helle Kante: das dunkle Logo-Blau hebt sich sonst kaum vom
+        // Seitenhintergrund ab (1,76:1).
+        primary: "border border-white/15 bg-accent text-foreground hover:bg-accent-hover",
         secondary: "bg-card text-foreground hover:bg-card-hover border border-border",
         outline: "border border-border bg-transparent text-foreground hover:bg-card",
         ghost: "bg-transparent text-muted hover:bg-card hover:text-foreground",
-        danger: "border border-accent/40 bg-accent-soft text-accent hover:bg-accent hover:text-foreground",
-        link: "text-accent underline-offset-4 hover:underline",
+        danger: "border border-danger/40 bg-danger/15 text-danger hover:bg-danger hover:text-foreground",
+        link: "text-foreground underline-offset-4 hover:underline",
       },
       size: {
         sm: "h-8 px-3 text-xs [&_svg]:size-3.5",
