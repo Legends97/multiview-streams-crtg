@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { Info, X } from "lucide-react";
 
 import { TwitchChatEmbed } from "@/components/chat/twitch-chat-embed";
 import { Button } from "@/components/ui/button";
@@ -9,11 +9,17 @@ import { hasSupabaseConfig } from "@/lib/env";
 import { cn } from "@/lib/utils/cn";
 import { usePlayerStore } from "@/stores/player-store";
 import type { ChatTab } from "@/types/layout";
+import type { StreamConfig } from "@/types/stream";
+
+/** Mindesthöhe eines Chats, wenn mehrere untereinander stehen. */
+const STACKED_CHAT_CLASS = "min-h-64 flex-1";
 
 export interface ChatPanelProps {
-  /** Twitch-Kanal des fokussierten Streams. */
-  channel: string | null;
-  channelLabel?: string;
+  /**
+   * Fahrer, deren Twitch-Chat angezeigt wird. Im Normalfall alle, die
+   * gerade senden — waehrend des Rennens also mehrere gleichzeitig.
+   */
+  streams: StreamConfig[];
   /** Community-Chat; wird vom Server-Layout eingesetzt. */
   communityChat: React.ReactNode;
   className?: string;
@@ -23,15 +29,10 @@ export interface ChatPanelProps {
  * Chat-Bereich neben dem Grid.
  *
  * Der Community-Chat braucht Konten und damit Supabase. Ist das nicht
- * konfiguriert, entfaellt die Tab-Leiste komplett und es laeuft nur der
- * offizielle Twitch-Chat des fokussierten Streams.
+ * konfiguriert, entfaellt die Tab-Leiste komplett und es laufen nur die
+ * offiziellen Twitch-Chats.
  */
-export function ChatPanel({
-  channel,
-  channelLabel,
-  communityChat,
-  className,
-}: ChatPanelProps) {
+export function ChatPanel({ streams, communityChat, className }: ChatPanelProps) {
   const chatTab = usePlayerStore((state) => state.chatTab);
   const setChatTab = usePlayerStore((state) => state.setChatTab);
   const setChatVisible = usePlayerStore((state) => state.setChatVisible);
@@ -48,7 +49,42 @@ export function ChatPanel({
     </Button>
   );
 
-  // Ohne Community-Chat: nur der Twitch-Chat, ohne Tab-Leiste.
+  const stacked = streams.length > 1;
+
+  const twitchChats = (
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div className="flex min-h-0 flex-1 flex-col divide-y divide-border overflow-y-auto">
+        {streams.length === 0 ? (
+          <div className="flex h-full items-center justify-center p-6 text-center">
+            <p className="text-sm text-muted">
+              Kein Fahrer sendet gerade. Sobald jemand auf Sendung geht, erscheint sein
+              Chat hier.
+            </p>
+          </div>
+        ) : (
+          streams.map((stream) => (
+            <TwitchChatEmbed
+              key={stream.id}
+              channel={stream.twitchChannel}
+              channelLabel={stream.name}
+              className={stacked ? STACKED_CHAT_CLASS : "flex-1"}
+            />
+          ))
+        )}
+      </div>
+
+      <div className="flex shrink-0 items-start gap-2 border-t border-border bg-surface px-3 py-2">
+        <Info className="mt-0.5 size-3.5 shrink-0 text-subtle" aria-hidden="true" />
+        <p className="text-[11px] leading-snug text-subtle">
+          Zum Schreiben ist eine Twitch-Anmeldung im Chat-Fenster nötig. Bleibt ein
+          Fenster leer, blockiert dein Browser Drittanbieter-Cookies — dann hilft der
+          Knopf oben rechts an jedem Chat.
+        </p>
+      </div>
+    </div>
+  );
+
+  // Ohne Community-Chat: nur die Twitch-Chats, ohne Tab-Leiste.
   if (!showCommunity) {
     return (
       <div
@@ -59,13 +95,12 @@ export function ChatPanel({
       >
         <div className="flex shrink-0 items-center gap-2 border-b border-border px-3 py-2">
           <p className="flex-1 truncate text-xs font-medium uppercase tracking-wide text-muted">
-            Twitch-Chat{channelLabel ? ` · ${channelLabel}` : ""}
+            Twitch-Chat
+            {streams.length === 1 && streams[0] ? ` · ${streams[0].name}` : ""}
           </p>
           {closeButton}
         </div>
-        <div className="min-h-0 flex-1">
-          <TwitchChatEmbed channel={channel} channelLabel={channelLabel} />
-        </div>
+        {twitchChats}
       </div>
     );
   }
@@ -90,8 +125,8 @@ export function ChatPanel({
 
       {/* forceMount wird bewusst NICHT genutzt: der inaktive Tab bleibt
           unmontiert, damit keine unnoetige Verbindung offen ist. */}
-      <TabsContent value="twitch" className="min-h-0 flex-1">
-        <TwitchChatEmbed channel={channel} channelLabel={channelLabel} />
+      <TabsContent value="twitch" className="flex min-h-0 flex-1 flex-col">
+        {twitchChats}
       </TabsContent>
 
       <TabsContent value="community" className="flex min-h-0 flex-1 flex-col">

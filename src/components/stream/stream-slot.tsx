@@ -48,6 +48,8 @@ export interface StreamSlotProps {
   assignedIds: (string | null)[];
   /** Zaehlt hoch, wenn alle Streams gemeinsam gestartet werden sollen. */
   startEpoch?: number;
+  /** Meldet den Status an den Store, damit der Chat ihn kennt. */
+  onStatusReport?: (streamId: string, status: StreamStatus) => void;
   onFocus: (streamId: string) => void;
   onAssign: (slotIndex: number, streamId: string) => void;
   onToggleMute: (streamId: string) => void;
@@ -75,6 +77,7 @@ function StreamSlotComponent({
   availableStreams,
   assignedIds,
   startEpoch = 0,
+  onStatusReport,
   onFocus,
   onAssign,
   onToggleMute,
@@ -95,14 +98,20 @@ function StreamSlotComponent({
   const [hintArmed, setHintArmed] = useState(false);
   const { ref, mounted } = useLazyMount<HTMLDivElement>({ keepMounted: isFocused });
 
-  const handleStatusChange = useCallback((next: StreamStatus) => {
-    setPlayerStatus(next);
+  const streamId = stream?.id ?? null;
 
-    // Sobald eine eindeutige Rueckmeldung kommt, ist die Kachel nicht mehr
-    // haengend — auch wenn der Stream erst nach der Wartezeit startet.
-    if (next !== "loading" && next !== "unknown") setStalled(false);
-    if (next === "offline" || next === "not_found") setPlaying(false);
-  }, []);
+  const handleStatusChange = useCallback(
+    (next: StreamStatus) => {
+      setPlayerStatus(next);
+
+      // Sobald eine eindeutige Rueckmeldung kommt, ist die Kachel nicht mehr
+      // haengend — auch wenn der Stream erst nach der Wartezeit startet.
+      if (next !== "loading" && next !== "unknown") setStalled(false);
+      if (next === "offline" || next === "not_found") setPlaying(false);
+      if (streamId) onStatusReport?.(streamId, next);
+    },
+    [streamId, onStatusReport],
+  );
 
   const handlePlaybackChange = useCallback((next: boolean) => {
     setPlaying(next);

@@ -49,6 +49,7 @@ export function LiveWorkspace({
       })),
     );
 
+  const statuses = usePlayerStore((state) => state.statuses);
   const initialize = usePlayerStore((state) => state.initialize);
   const setChatVisible = usePlayerStore((state) => state.setChatVisible);
   const setTheaterMode = usePlayerStore((state) => state.setTheaterMode);
@@ -123,6 +124,16 @@ export function LiveWorkspace({
 
   const focusedStream = focusedStreamId ? getStreamById(focusedStreamId) : undefined;
 
+  // Jeder sendende Fahrer bekommt seinen Chat. Solange noch keiner als live
+  // erkannt ist, bleibt der fokussierte Fahrer als Rueckfallebene stehen.
+  const chatStreams = useMemo(() => {
+    const live = availableStreams.filter((stream) => statuses[stream.id] === "live");
+
+    if (live.length > 0) return live;
+
+    return focusedStream ? [focusedStream] : [];
+  }, [availableStreams, statuses, focusedStream]);
+
   return (
     <div
       data-workspace
@@ -149,8 +160,7 @@ export function LiveWorkspace({
 
         {chatVisible ? (
           <ChatPanel
-            channel={focusedStream?.twitchChannel ?? null}
-            channelLabel={focusedStream?.name}
+            streams={chatStreams}
             communityChat={communityChat}
             className="h-72 w-full shrink-0 border-l-0 border-t lg:h-auto lg:w-80 lg:border-l lg:border-t-0 xl:w-[340px]"
           />

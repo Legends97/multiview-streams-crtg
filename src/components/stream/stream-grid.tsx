@@ -56,6 +56,7 @@ export function StreamGrid({
   const toggleMute = usePlayerStore((state) => state.toggleMute);
   const setVolume = usePlayerStore((state) => state.setVolume);
   const maximizeSlot = usePlayerStore((state) => state.maximizeSlot);
+  const setStreamStatus = usePlayerStore((state) => state.setStreamStatus);
 
   const preset = getLayout(layoutId);
   const geometry = getGridGeometry(preset, breakpoint);
@@ -124,6 +125,7 @@ export function StreamGrid({
               availableStreams={availableStreams}
               assignedIds={slots}
               startEpoch={startEpoch}
+              onStatusReport={setStreamStatus}
               onFocus={focusStream}
               onAssign={handleAssign}
               onToggleMute={toggleMute}

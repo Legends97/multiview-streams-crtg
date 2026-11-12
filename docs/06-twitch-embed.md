@@ -177,6 +177,10 @@ src.searchParams.set("darkpopout", "");   // dunkles Chat-Theme
 
 Hinweise:
 
+- **Es laufen alle Chats der sendenden Fahrer gleichzeitig**, untereinander im
+  Chat-Bereich. Der Live-Status kommt aus `usePlayerStore().statuses`, den die
+  Kacheln aus den Player-Ereignissen melden. Sendet niemand, bleibt der Chat des
+  fokussierten Fahrers stehen
 - `key={channel}` ist wichtig: ohne Remount behält das iframe den alten Kanal
 - **`allow-storage-access-by-user-activation` nicht weglassen.** Ohne diese Freigabe
   bleibt das Chat-Fenster leer, sobald der Browser Drittanbieter-Cookies blockiert —

@@ -10,6 +10,7 @@ import {
   swapSlots as swapSlotValues,
 } from "@/lib/player/slots";
 import type { ChatTab, LayoutId, PlayerLayoutState } from "@/types/layout";
+import type { StreamStatus } from "@/types/stream";
 
 export const DEFAULT_VOLUME = 0.6;
 
@@ -28,6 +29,11 @@ interface PlayerState extends PlayerLayoutState {
    * blockieren und Twitch das nicht meldet.
    */
   startEpoch: number;
+  /**
+   * Zuletzt gemeldeter Status je Stream. Die Kacheln melden ihn, der
+   * Chat-Bereich entscheidet daran, welche Chats er anzeigt.
+   */
+  statuses: Record<string, StreamStatus>;
 }
 
 interface PlayerActions {
@@ -48,6 +54,7 @@ interface PlayerActions {
   setTheaterMode(active: boolean): void;
   /** Alle montierten Player starten (durch Klick des Zuschauers). */
   requestStart(): void;
+  setStreamStatus(streamId: string, status: StreamStatus): void;
   reset(): void;
 }
 
@@ -67,6 +74,7 @@ const initialState: PlayerState = {
   layoutBeforeMaximize: null,
   hydrated: false,
   startEpoch: 0,
+  statuses: {},
 };
 
 /**
@@ -208,6 +216,16 @@ export const usePlayerStore = create<PlayerStore>()((set, get) => ({
 
   requestStart() {
     set({ startEpoch: Date.now() });
+  },
+
+  setStreamStatus(streamId, status) {
+    const { statuses } = get();
+
+    // Gleicher Status: keine neue Objektidentitaet, sonst rendert der
+    // Chat-Bereich bei jedem Player-Ereignis neu.
+    if (statuses[streamId] === status) return;
+
+    set({ statuses: { ...statuses, [streamId]: status } });
   },
 
   setTheaterMode(active) {
