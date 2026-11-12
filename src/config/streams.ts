@@ -24,7 +24,7 @@ import type { StreamConfig } from "@/types/stream";
 const rawStreams: StreamConfig[] = [
   {
     id: "legends-l97",
-    name: "Legends L97",
+    name: "Legends",
     twitchChannel: "legends_l97",
     role: "Fahrer",
     active: true,
@@ -46,7 +46,7 @@ const rawStreams: StreamConfig[] = [
   },
   {
     id: "thebennibluetv",
-    name: "TheBenniBlue",
+    name: "TheBenniBlueTV",
     twitchChannel: "thebennibluetv",
     role: "Fahrer",
     active: true,
