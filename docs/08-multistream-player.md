@@ -48,6 +48,11 @@ Technische Grundlagen der Twitch-Einbindung: [`06-twitch-embed.md`](06-twitch-em
 Tastenkürzel greifen nur, wenn kein Eingabefeld fokussiert ist. Die Liste ist über ein
 `?`-Overlay einsehbar.
 
+Tastenkürzel greifen nicht, solange ein Eingabefeld **oder ein eingebettetes Fenster**
+(Twitch-Chat) den Fokus hat. Ohne die iframe-Ausnahme verschluckt der seitenweite
+`keydown`-Listener jeden Buchstaben, bevor er im Chat ankommt — Schreiben ist dann
+unmöglich.
+
 ### Fokus-Audio
 
 Genau ein Stream ist unmuted. Beim Fokuswechsel wird zuerst der alte Player stumm
