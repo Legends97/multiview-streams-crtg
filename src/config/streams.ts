@@ -55,6 +55,18 @@ const rawStreams: StreamConfig[] = [
     carNumber: 317,
     carClass: "GT2",
   },
+  {
+    id: "redlineracing2026",
+    // BEISPIELWERT: Anzeigename noch nicht bestätigt, bitte ersetzen.
+    name: "Redline Racing",
+    twitchChannel: "redlineracing2026",
+    role: "Fahrer",
+    active: true,
+    priority: 4,
+    // car, carNumber und carClass fehlen noch. Solange sie fehlen,
+    // erscheint dieser Fahrer nicht in der Fahrzeugtabelle (siehe
+    // src/lib/race/entries.ts) — keine erfundenen Werte eintragen.
+  },
 ];
 
 /** Validierte Streams. Ein Fehler bricht Build bzw. Start ab. */

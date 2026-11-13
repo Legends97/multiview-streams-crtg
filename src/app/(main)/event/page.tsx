@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { event } from "@/config/event";
 import { race } from "@/config/race";
 import { getActiveStreams } from "@/config/streams";
+import { getRaceEntries } from "@/lib/race/entries";
 import { getFallbackRaceState } from "@/lib/race/state";
 import { getSocialIcon } from "@/lib/utils/social";
 import { formatDateTime, getServerNow } from "@/lib/utils/time";
@@ -26,6 +27,9 @@ export default function EventPage() {
   const serverNow = getServerNow();
   const raceState = getFallbackRaceState(serverNow);
   const streams = getActiveStreams();
+  // Fahrzeuge zaehlen, nicht Fahrer: ohne Auto, Nummer und Klasse erscheint
+  // ein Fahrer nicht in der Fahrzeugtabelle.
+  const vehicleCount = getRaceEntries().length;
 
   return (
     <div className="mx-auto max-w-[1920px] px-4 py-10 lg:px-6 lg:py-14">
@@ -73,7 +77,11 @@ export default function EventPage() {
         </h2>
         <p className="mt-2 text-sm text-muted">
           {race.team.name} startet mit {streams.length}{" "}
-          {streams.length === 1 ? "Fahrzeug" : "Fahrzeugen"}.
+          {streams.length === 1 ? "Fahrer" : "Fahrern"}
+          {vehicleCount > 0
+            ? ` in ${vehicleCount} ${vehicleCount === 1 ? "Fahrzeug" : "Fahrzeugen"}`
+            : ""}
+          .
         </p>
         <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
           {streams.map((stream) => (
