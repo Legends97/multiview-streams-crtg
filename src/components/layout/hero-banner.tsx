@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { event } from "@/config/event";
 import { race } from "@/config/race";
 import { getActiveStreams } from "@/config/streams";
-import { getRaceClasses, getRaceEntries } from "@/lib/race/entries";
+import { getRaceClasses, getVehicleCount } from "@/lib/race/entries";
 import { getRaceStatusMeta } from "@/lib/race/status";
 import type { RaceState } from "@/types/race";
 
@@ -22,7 +22,7 @@ export function HeroBanner({
   const startsAt = raceState.startedAt ?? race.startsAt;
   const meta = getRaceStatusMeta(raceState.status);
   const driverCount = getActiveStreams().length;
-  const entries = getRaceEntries();
+  const vehicleCount = getVehicleCount();
   const classes = getRaceClasses();
 
   return (
@@ -68,8 +68,8 @@ export function HeroBanner({
                 <dd>
                   {race.team.car && race.team.carNumber
                     ? `#${race.team.carNumber} ${race.team.car} · ${race.class}`
-                    : entries.length > 0
-                      ? `${entries.length} ${entries.length === 1 ? "Fahrzeug" : "Fahrzeuge"} · ${classes.join(" / ")}`
+                    : vehicleCount > 0
+                      ? `${vehicleCount} ${vehicleCount === 1 ? "Fahrzeug" : "Fahrzeuge"} · ${classes.join(" / ")}`
                       : race.class}
                 </dd>
               </div>

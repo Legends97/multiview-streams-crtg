@@ -26,6 +26,17 @@ export function getRaceEntries(): RaceEntry[] {
     }));
 }
 
+/**
+ * Anzahl der Fahrzeuge im Rennen.
+ *
+ * Gezaehlt werden Startnummern, nicht Fahrer: in einem 24-Stunden-Rennen
+ * teilen sich mehrere Fahrer ein Auto, und jeder streamt dabei aus dem
+ * eigenen Cockpit.
+ */
+export function getVehicleCount(): number {
+  return new Set(getRaceEntries().map((entry) => entry.carNumber)).size;
+}
+
 /** Vertretene Klassen, alphabetisch und ohne Dubletten. */
 export function getRaceClasses(): string[] {
   return Array.from(new Set(getRaceEntries().map((entry) => entry.carClass))).sort();

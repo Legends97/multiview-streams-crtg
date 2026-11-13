@@ -63,9 +63,12 @@ const rawStreams: StreamConfig[] = [
     role: "Fahrer",
     active: true,
     priority: 4,
-    // car, carNumber und carClass fehlen noch. Solange sie fehlen,
-    // erscheint dieser Fahrer nicht in der Fahrzeugtabelle (siehe
-    // src/lib/race/entries.ts) — keine erfundenen Werte eintragen.
+    // Teilt den KTM #317 mit TheBenniBlueTV. Zwei Fahrer auf einem Auto
+    // sind gewollt — die Fahrzeugzaehlung rechnet Startnummern, nicht
+    // Fahrer (src/lib/race/entries.ts).
+    car: "KTM X-Bow GT2",
+    carNumber: 317,
+    carClass: "GT2",
   },
 ];
 

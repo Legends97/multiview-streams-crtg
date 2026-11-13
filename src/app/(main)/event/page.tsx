@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { event } from "@/config/event";
 import { race } from "@/config/race";
 import { getActiveStreams } from "@/config/streams";
-import { getRaceEntries } from "@/lib/race/entries";
+import { getVehicleCount } from "@/lib/race/entries";
 import { getFallbackRaceState } from "@/lib/race/state";
 import { getSocialIcon } from "@/lib/utils/social";
 import { formatDateTime, getServerNow } from "@/lib/utils/time";
@@ -27,9 +27,9 @@ export default function EventPage() {
   const serverNow = getServerNow();
   const raceState = getFallbackRaceState(serverNow);
   const streams = getActiveStreams();
-  // Fahrzeuge zaehlen, nicht Fahrer: ohne Auto, Nummer und Klasse erscheint
-  // ein Fahrer nicht in der Fahrzeugtabelle.
-  const vehicleCount = getRaceEntries().length;
+  // Fahrzeuge zaehlen, nicht Fahrer: mehrere Fahrer koennen sich ein Auto
+  // teilen, und ohne Auto und Startnummer zaehlt ein Fahrer gar nicht mit.
+  const vehicleCount = getVehicleCount();
 
   return (
     <div className="mx-auto max-w-[1920px] px-4 py-10 lg:px-6 lg:py-14">
