@@ -6,18 +6,24 @@ Alles, was nicht Darstellung ist. Komponenten rufen diese Funktionen auf, nie um
 | --- | --- |
 | `supabase/client.ts` | Browser-Client für Client Components und Realtime |
 | `supabase/server.ts` | Server-Client für Server Components, Actions, Route Handler |
-| `supabase/middleware.ts` | Client für den Session-Refresh in der Middleware |
+| `supabase/middleware.ts` | Client für den Session-Refresh in `src/proxy.ts` |
 | `supabase/admin.ts` | Service-Role-Client, **nur serverseitig**, umgeht RLS |
 | `twitch/load-embed.ts` | einmaliges, idempotentes Laden des Player-Scripts |
-| `twitch/parents.ts` | erlaubte `parent`-Hosts aus `NEXT_PUBLIC_TWITCH_PARENTS` |
-| `twitch/helix.ts` | optionale Helix-Abfrage für Live-Status und Zuschauerzahlen |
-| `validation/` | Zod-Schemas für Config, Auth, Chat, Profil, Admin-Eingaben |
+| `twitch/parents.ts` | erlaubte `parent`-Hosts aus `NEXT_PUBLIC_TWITCH_PARENTS`, Kanal- und Popout-URLs |
+| `twitch/auth.ts` | Twitch-Anmeldung der Zuschauer (Implicit Grant, Sitzung im `localStorage`) |
+| `twitch/chat-api.ts` | Helix: Zuschauer und Kanal auflösen, Chat-Nachricht senden |
+| `player/grid.ts`, `player/slots.ts` | Grid-Klassen je Layout, Slot-Belegung und -Tausch |
+| `race/entries.ts` | Fahrzeuge, Klassen und `getVehicleCount()` aus der Stream-Config |
+| `race/state.ts`, `race/status.ts` | Rennzustand ohne Datenbank, Beschriftung der Status |
+| `validation/config.ts` | Zod-Schemas für `src/config/` |
 | `auth/guards.ts` | `requireUser()`, `requireRole()` — lesen die Rolle frisch aus `profiles` |
-| `chat/` | Nachrichten laden, senden, moderieren, Spam-Schutz |
-| `settings/` | `user_settings` lesen und schreiben |
-| `race/` | `race_state` und `drivers` lesen und schreiben |
-| `env.ts` | zentrale, validierte Umgebungsvariablen |
-| `utils/` | kleine reine Helfer (`cn`, Zeitformatierung, Slugs) |
+| `env.ts` | öffentliche, validierte Umgebungsvariablen plus `hasTwitchClientId()`, `hasSupabaseConfig()` |
+| `env.server.ts` | serverseitige Secrets, nie im Client-Bundle |
+| `utils/` | kleine reine Helfer (`cn`, Zeit, Text, Social-Icons) |
+
+Noch nicht gebaut, kommen mit ihren Phasen: `chat/` (Community-Chat, Phase 6),
+`settings/` (`user_settings`, Phase 7), `twitch/helix.ts` (Live-Status und
+Zuschauerzahlen, Phase 11) und weitere Schemas in `validation/`.
 
 ## Konventionen
 

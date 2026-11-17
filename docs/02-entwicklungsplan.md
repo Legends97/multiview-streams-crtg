@@ -9,6 +9,15 @@ npm run typecheck && npm run lint && npm run build
 Erst wenn alle drei Befehle fehlerfrei durchlaufen und die Definition of Done erfüllt ist,
 beginnt die nächste Phase. Gefundene Fehler werden sofort behoben, nicht vertagt.
 
+**Stand:** Die Phasen 0 bis 4 sowie 8, 9 und 12 sind gebaut und in Produktion. Phase 5 ist
+nur zur Hälfte da — die Supabase-Clients, Guards und `src/proxy.ts` stehen, Anmeldeseiten
+und Profil fehlen. Offen sind ausserdem Phase 6 (Community-Chat), 7 (gespeicherte
+Layouts), 10 (Admin) und 11 (Helix-Live-Status, Zuschauerzahlen, CSP). Ohne
+Supabase-Variablen blenden sich diese Funktionen aus, statt zu stören.
+
+Abweichend vom ursprünglichen Plan zeigt der Chat **alle** sendenden Fahrer gleichzeitig
+und hat ein eigenes Eingabefeld (Phase 4).
+
 ---
 
 ## Phase 0 — Projekt-Setup und Tooling
@@ -22,8 +31,11 @@ beginnt die nächste Phase. Gefundene Fehler werden sofort behoben, nicht vertag
 - ESLint und Prettier konfigurieren, Scripts `dev`, `build`, `start`, `lint`, `typecheck`
 - `.gitignore`, `.env.example`, Git-Repository initialisieren
 
-**Dateien:** `package.json`, `tsconfig.json`, `next.config.ts`, `tailwind.config.ts`,
+**Dateien:** `package.json`, `tsconfig.json`, `next.config.ts`, `postcss.config.mjs`,
 `eslint.config.mjs`, `.env.example`, `src/app/layout.tsx`, `src/app/page.tsx`
+
+Tailwind 4 wird über `@tailwindcss/postcss` eingebunden und braucht keine
+`tailwind.config.ts`.
 
 **Definition of Done:** `npm run dev` zeigt eine leere Seite im Dark-Mode-Hintergrund,
 Gate grün.
@@ -34,7 +46,7 @@ Gate grün.
 
 **Ziel:** das Projekt sieht aus wie ein Broadcast-Produkt, bevor Funktionen dazukommen.
 
-- Design-Tokens als CSS-Variablen in `src/styles/globals.css`, Mapping in `tailwind.config.ts`
+- Design-Tokens als CSS-Variablen im `@theme`-Block von `src/styles/globals.css`
 - Schriftarten laden, Typografie-Skala, Basis-Utilities
 - Header mit Logo, Event-Name, Navigation, Live-Badge, Zuschauerzahl, Auth-Slot
 - Footer, Seitenrahmen, Container-Breiten
@@ -91,17 +103,26 @@ Manuelle Prüfung mit mindestens vier gleichzeitigen Streams.
 
 ## Phase 4 — Twitch-Chat-Embed
 
-**Ziel:** der originale Twitch-Chat des fokussierten Streams.
+**Ziel:** der originale Twitch-Chat aller Fahrer, die gerade senden — nicht nur des
+fokussierten.
 
 - `TwitchChatEmbed` mit `parent`-Ableitung aus `NEXT_PUBLIC_TWITCH_PARENTS`
 - `ChatPanel` mit Tabs für Twitch-Chat und Community-Chat (zweiter Tab zunächst deaktiviert)
 - Chat ein-/ausblenden, Breite auf Desktop, Overlay-Variante auf Mobil
-- Wechsel des Fokus-Streams lädt den passenden Chat nachweislich neu
+- Die Kacheln melden ihren Live-Status in den `player-store`; das Panel zeigt die Chats
+  aller sendenden Fahrer untereinander und fällt auf den fokussierten Kanal zurück,
+  wenn niemand live ist
+- Eigenes Eingabefeld (`TwitchChatComposer`) plus Twitch-Anmeldung der Zuschauer
+  (`src/lib/twitch/auth.ts`, `chat-api.ts`, Route `/auth/twitch`), weil Twitchs eigene
+  Leiste im Embed wirkungslos bleibt, sobald der Browser dessen Cookies blockiert
 
-**Dateien:** `src/components/chat/TwitchChatEmbed.tsx`, `src/components/chat/ChatPanel.tsx`
+**Dateien:** `src/components/chat/twitch-chat-embed.tsx`, `chat-panel.tsx`,
+`twitch-chat-composer.tsx`, `src/lib/twitch/auth.ts`, `src/lib/twitch/chat-api.ts`,
+`src/app/auth/twitch/page.tsx`
 
-**Definition of Done:** Twitch-Chat lädt lokal und im Preview-Deployment, Fokuswechsel
-funktioniert, Gate grün.
+**Definition of Done:** Twitch-Chat lädt lokal und in Produktion, mehrere Chats
+gleichzeitig, eine Nachricht aus dem eigenen Feld kommt im Twitch-Chat an, Gate grün.
+Hintergrund und Grenzen: [`06-twitch-embed.md`](06-twitch-embed.md).
 
 ---
 
@@ -137,7 +158,7 @@ gesperrt; Gate grün.
 - Nachrichtendarstellung mit Avatar, Benutzername, Rollen-Badge, Zeitstempel
 - Moderationsaktionen im Kontextmenü, nur für Moderator und Admin sichtbar
 
-**Dateien:** `src/components/chat/CommunityChat.tsx`, `src/lib/chat/*`,
+**Dateien:** `src/components/chat/community-chat.tsx`, `src/lib/chat/*`,
 `supabase/migrations/0002_chat.sql`
 
 **Definition of Done:** Zwei Browser sehen Nachrichten in Echtzeit; ein Gast kann nicht

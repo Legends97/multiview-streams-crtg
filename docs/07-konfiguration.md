@@ -41,6 +41,9 @@ export const streams: StreamConfig[] = [
     active: true,
     priority: 2,
     avatar: "/drivers/driver-2.webp",
+    car: "KTM X-Bow GT2",
+    carNumber: 317,
+    carClass: "GT2",
   },
 ];
 ```
@@ -55,6 +58,17 @@ export const streams: StreamConfig[] = [
 | `priority` | `number` | nein | Sortierung und Slot-Vorbelegung, kleinere Zahl zuerst |
 | `avatar` | `string` | nein | Pfad in `public/drivers/` |
 | `description` | `string` | nein | ein Satz für die Event-Seite |
+| `car` | `string` | nein | Fahrzeugmodell, zum Beispiel "Mercedes-AMG GT4" |
+| `carNumber` | `number` | nein | Startnummer des Fahrzeugs |
+| `carClass` | `string` | nein | Fahrzeugklasse, zum Beispiel "GT4" oder "GT2" |
+
+**Fahrzeugangaben:** In einem Multiklasse-Rennen fährt jeder Fahrer sein eigenes Auto,
+deshalb stehen Modell, Nummer und Klasse pro Fahrer und nicht in `race.ts`. Zwei Fahrer
+dürfen aber dieselbe Nummer tragen — dann teilen sie sich ein Auto und wechseln sich im
+Rennen ab. Die Fahrzeugtabelle zeigt für jeden Fahrer eine Zeile, die Fahrzeugzählung
+(`getVehicleCount()` in `src/lib/race/entries.ts`) rechnet dagegen Startnummern. Fehlen
+`car`, `carNumber` oder `carClass`, bleibt der Fahrer aus Tabelle und Zählung heraus,
+statt erfundene Werte zu zeigen.
 
 ### Typdefinition
 
@@ -69,6 +83,9 @@ export interface StreamConfig {
   priority?: number;
   avatar?: string;
   description?: string;
+  car?: string;
+  carNumber?: number;
+  carClass?: string;
 }
 ```
 
@@ -90,6 +107,9 @@ export const streamConfigSchema = z.object({
   priority: z.number().int().positive().optional(),
   avatar: z.string().startsWith("/").optional(),
   description: z.string().max(200).optional(),
+  car: z.string().min(1).max(40).optional(),
+  carNumber: z.number().int().positive().max(999).optional(),
+  carClass: z.string().min(1).max(20).optional(),
 });
 
 export const streamsSchema = z
@@ -97,13 +117,9 @@ export const streamsSchema = z
   .min(1, "Mindestens ein Stream muss konfiguriert sein")
   .max(16, "Mehr als 16 Streams werden nicht unterstützt")
   .superRefine((list, ctx) => {
-    const seen = new Set<string>();
-    for (const stream of list) {
-      if (seen.has(stream.id)) {
-        ctx.addIssue({ code: "custom", message: `Doppelte id: ${stream.id}` });
-      }
-      seen.add(stream.id);
-    }
+    // Doppelte id und doppelter twitchChannel sind Fehler, eine doppelte
+    // carNumber nicht: zwei Fahrer koennen sich ein Auto teilen.
+    // Ausserdem muss mindestens ein Stream active sein.
   });
 ```
 
@@ -131,10 +147,14 @@ Komponenten nutzen immer diese Funktionen, niemals das Array direkt.
 
 1. Objekt in `streams` ergänzen, `id` eindeutig und klein geschrieben wählen.
 2. `twitchChannel` exakt wie der Twitch-Login setzen (nicht der Anzeigename).
-3. Avatar als WebP nach `public/drivers/` legen, Pfad eintragen.
-4. `npm run dev` starten und prüfen, ob Player und Chat laden.
-5. `npm run typecheck && npm run lint && npm run build`.
-6. Deployen — die Website lädt die Kanäle automatisch.
+3. `car`, `carNumber` und `carClass` eintragen. Sitzt der Fahrer im Auto eines anderen,
+   dieselbe Nummer und dasselbe Modell verwenden. Sind die Angaben noch unbekannt, die
+   Felder weglassen statt zu raten — der Fahrer läuft dann im Player mit, erscheint aber
+   nicht in der Fahrzeugtabelle.
+4. Avatar als WebP nach `public/drivers/` legen, Pfad eintragen.
+5. `npm run dev` starten und prüfen, ob Player und Chat laden.
+6. `npm run typecheck && npm run lint && npm run build`.
+7. Deployen — die Website lädt die Kanäle automatisch.
 
 Einen Fahrer **entfernen**: `active: false` setzen statt löschen. So bleiben gespeicherte
 Layouts gültig, und der Eintrag ist nach dem Rennen noch nachvollziehbar.

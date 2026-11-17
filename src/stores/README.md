@@ -5,8 +5,15 @@ gehören nach Supabase, Konfiguration nach `src/config/`.
 
 | Store | Inhalt |
 | --- | --- |
-| `player-store.ts` | Layout, Slot-Belegung, Fokus-Stream, Mute- und Volume-Werte, Chat-Sichtbarkeit, Chat-Tab, Theater Mode |
-| `ui-store.ts` | Zustände, die mehrere Komponenten teilen: offene Overlays, Shortcut-Hilfe, Toast-Warteschlange |
+| `player-store.ts` | Layout, Slot-Belegung, Fokus-Stream, Mute- und Volume-Werte, Chat-Sichtbarkeit, Chat-Tab, Theater Mode, Live-Status je Stream (`statuses`), Startsignal für alle Kacheln (`startEpoch`) |
+
+`ui-store.ts` ist noch nicht nötig: Overlays und Hinweise leben bisher lokal in ihren
+Komponenten. Er kommt erst, wenn Zustand wirklich zwischen Bereichen geteilt wird.
+
+`statuses` meldet jede Kachel selbst aus den Player-Events; das Chat-Panel liest daraus,
+welche Fahrer gerade senden, und zeigt deren Chats gleichzeitig. `startEpoch` ist der
+Knopf "Streams starten" in der Werkzeugleiste: er erhöht sich und jede Kachel versucht
+daraufhin erneut, die Wiedergabe zu starten, falls der Browser das Autoplay unterbunden hat.
 
 ## Regeln
 

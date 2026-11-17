@@ -49,7 +49,7 @@ Supabase-Queries zu.
 | Route | Rendering | Zugriff | Inhalt |
 | --- | --- | --- | --- |
 | `/` | Server | öffentlich | Landing/Hero mit Rennstatus, Einstieg in den Live-Bereich |
-| `/live` | Server-Shell + Client-Player | öffentlich (Chat nur eingeloggt) | Multistream-Oberfläche mit Chat |
+| `/live` | Server-Shell + Client-Player | öffentlich; Twitch-Chat lesbar ohne alles, Schreiben nach Twitch-Anmeldung; Community-Chat nur eingeloggt | Multistream-Oberfläche mit Chat |
 | `/race` | Server | öffentlich | Race-Information-System, Stints, Fahrerwechsel |
 | `/event` | Server | öffentlich | Team, Fahrer, Fahrzeug, Strecke, Sponsoren |
 | `/login` | Server + Form | nur Gäste | Anmeldung |
@@ -64,6 +64,10 @@ Supabase-Queries zu.
 | `/admin/drivers` | Server | Admin | Fahrerinformationen, aktueller Fahrer |
 | `/api/auth/callback` | Route Handler | öffentlich | Supabase-Auth-Callback |
 | `/api/twitch/status` | Route Handler | öffentlich, gecacht | Live-Status der Kanäle |
+| `/auth/twitch` | Client | öffentlich | Rückleitung der Twitch-Anmeldung der Zuschauer, verarbeitet das Token im URL-Fragment |
+
+Gebaut sind `/`, `/live`, `/race`, `/event` und `/auth/twitch`. Die übrigen Routen gehören
+zu den Phasen 5, 7, 10 und 11; ihre Zugriffsregeln stehen bereits in `src/proxy.ts`.
 
 Route-Gruppen: `(auth)` für Gast-Routen mit schmalem Layout, `(main)` für das
 Broadcast-Layout mit Header. `/admin` liegt bewusst ausserhalb der Gruppen und hat ein
@@ -102,8 +106,8 @@ eigenes Layout mit Rollenprüfung.
 
 ### 4.4 Authentifizierung
 
-Middleware erneuert bei jedem Request das Supabase-Session-Cookie und blockt geschützte
-Routen früh. Rollen werden nie aus dem Cookie, sondern immer aus `profiles.role` gelesen.
+`src/proxy.ts` (ab Next.js 16 der Name der früheren Middleware) erneuert bei jedem Request
+das Supabase-Session-Cookie und blockt geschützte Routen früh. Rollen werden nie aus dem Cookie, sondern immer aus `profiles.role` gelesen.
 Details in [`09-auth-und-rollen.md`](09-auth-und-rollen.md).
 
 ## 5. Komponentenhierarchie der Live-Seite
@@ -117,9 +121,13 @@ app/(main)/live/page.tsx            Server: Config, Settings, Chat-Historie, Rac
    │     ├─ <TwitchPlayer>          Player-Instanz in Ref, kein Remount bei Rerender
    │     └─ <StreamOverlay>         Fahrername, Rolle, Live-Badge, Mute, Volume, Maximieren
    └─ <ChatPanel>                   Tab-Umschaltung
-      ├─ <TwitchChatEmbed>          iframe für den fokussierten Kanal
-      └─ <CommunityChat>            Realtime-Liste, Eingabe, Moderationsaktionen
+      ├─ <TwitchChatEmbed> × n      ein iframe je sendendem Fahrer, untereinander
+      │  └─ <TwitchChatComposer>    eigenes Eingabefeld, sendet über die Helix-API
+      └─ <CommunityChat>            Realtime-Liste, Eingabe, Moderationsaktionen (Phase 6)
 ```
+
+Welche Fahrer gerade senden, meldet jede Kachel über `statuses` im `player-store`; das
+Chat-Panel zeigt genau deren Chats. Ist niemand live, bleibt der fokussierte Kanal stehen.
 
 ## 6. State-Strategie
 

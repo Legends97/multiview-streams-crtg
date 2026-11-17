@@ -5,24 +5,32 @@ Routen, Layouts, Server Actions und Route Handler. Server Components sind der St
 
 ## Struktur
 
+### Gebaut
+
 | Pfad | Route | Zugriff |
 | --- | --- | --- |
-| `layout.tsx` | Root-Layout, Schriften, globale Styles | — |
-| `page.tsx` | `/` Landing mit Hero und Rennstatus | öffentlich |
-| `(auth)/login/` | `/login` | nur Gäste |
-| `(auth)/register/` | `/register` | nur Gäste |
-| `(auth)/reset-password/` | `/reset-password` | nur Gäste |
-| `(main)/live/` | `/live` Multistream-Oberfläche | öffentlich, Chat nur eingeloggt |
+| `layout.tsx` | Root-Layout, Schriften, globale Styles, Browser-Titel aus `event.browserTitle` | — |
+| `(main)/page.tsx` | `/` Landing mit Hero, Rennstatus und Fahrern | öffentlich |
+| `(main)/live/` | `/live` Multistream-Oberfläche mit Twitch-Chat | öffentlich |
 | `(main)/race/` | `/race` Race-Information-System | öffentlich |
-| `(main)/event/` | `/event` Team, Fahrer, Sponsoren | öffentlich |
-| `(main)/profile/` | `/profile` | eingeloggt |
-| `(main)/settings/` | `/settings` | eingeloggt |
-| `admin/` | `/admin` Übersicht und Statistiken | Admin |
-| `admin/users/` | Benutzer und Rollen | Admin |
-| `admin/chat/` | Chat-Moderation | Moderator, Admin |
-| `admin/race/` | Rennstatus und Rennzeiten | Admin |
-| `admin/drivers/` | Fahrerdaten | Admin |
-| `api/` | Route Handler (`auth/callback`, `twitch/status`) | siehe Doku |
+| `(main)/event/` | `/event` Team, Fahrer, Fahrzeuge, Sponsoren | öffentlich |
+| `auth/twitch/` | `/auth/twitch` Rückleitung der Twitch-Anmeldung der Zuschauer | öffentlich |
+
+Der Twitch-Chat auf `/live` braucht **kein** Konto auf dieser Seite. Zum Mitlesen gar
+nichts, zum Schreiben eine einmalige Twitch-Anmeldung im Browser des Zuschauers.
+`(auth)/layout.tsx` steht bereits, hat aber noch keine Seiten.
+
+### Mit ihren Phasen geplant
+
+| Pfad | Route | Phase |
+| --- | --- | --- |
+| `(auth)/login/`, `(auth)/register/`, `(auth)/reset-password/` | nur Gäste | 5 |
+| `(main)/profile/`, `(main)/settings/` | eingeloggt | 5, 7 |
+| `admin/`, `admin/users/`, `admin/chat/`, `admin/race/`, `admin/drivers/` | Moderator, Admin | 10 |
+| `api/auth/callback`, `api/twitch/status` | Route Handler | 5, 11 |
+
+Die Zugriffsprüfung für diese Routen steht schon in `src/proxy.ts` (Next.js 16 nennt die
+frühere Middleware so) und greift, sobald Supabase konfiguriert ist.
 
 Die Route-Gruppen `(auth)` und `(main)` erscheinen nicht in der URL. Sie existieren, damit
 Gast-Routen ein schmales Layout und der Broadcast-Bereich den Header bekommen. `admin/`

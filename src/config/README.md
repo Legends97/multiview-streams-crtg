@@ -1,22 +1,25 @@
 # `src/config` — Zentrale Konfiguration
 
-Hier wird gepflegt, was sich pro Rennen oder pro Team ändert. Diese vier Dateien sind die
+Hier wird gepflegt, was sich pro Rennen oder pro Team ändert. Diese Dateien sind die
 einzige Stelle für Fahrer, Kanäle, Zeiten und Sponsoren.
 
 | Datei | Inhalt | Ändert sich |
 | --- | --- | --- |
-| `streams.ts` | Fahrer und ihre Twitch-Kanäle, plus `getActiveStreams()`, `getStreamById()` | pro Rennen |
+| `streams.ts` | Fahrer, Twitch-Kanäle und Fahrzeuge, plus `getActiveStreams()`, `getStreamById()` | pro Rennen |
 | `race.ts` | Rennname, Strecke, Klasse, Team, Fahrzeug, Startzeit, Dauer | pro Rennen |
-| `event.ts` | Teamtexte, Zeitplan, Social Media, Sponsoren | selten |
+| `event.ts` | Titel, Browser-Titel, Teamtexte, Zeitplan, Social Media, Sponsoren | selten |
 | `layouts.ts` | Layout-Presets des Players und Default-Layout | fast nie |
+| `navigation.ts` | Einträge der Hauptnavigation | fast nie |
 
 ## Fahrer hinzufügen
 
 1. Objekt in `streams` ergänzen, `id` eindeutig und klein geschrieben
 2. `twitchChannel` exakt wie der Twitch-Login (nicht der Anzeigename, keine URL)
-3. Avatar als WebP nach `public/drivers/` legen und Pfad eintragen
-4. `npm run dev`, Player und Chat prüfen
-5. `npm run typecheck && npm run lint && npm run build`, dann deployen
+3. `car`, `carNumber`, `carClass` eintragen — bei zwei Fahrern auf einem Auto zweimal
+   dieselbe Nummer. Unbekannte Angaben weglassen, nicht raten
+4. Avatar als WebP nach `public/drivers/` legen und Pfad eintragen
+5. `npm run dev`, Player und Chat prüfen
+6. `npm run typecheck && npm run lint && npm run build`, dann deployen
 
 Einen Fahrer entfernen: `active: false` setzen statt löschen. Die `id` wird in
 `user_settings` und `drivers.stream_id` referenziert und darf nachträglich nicht geändert

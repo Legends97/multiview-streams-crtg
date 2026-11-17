@@ -65,9 +65,9 @@ Statusfarben für den Rennstatus:
 }
 ```
 
-Die Tokens werden in `tailwind.config.ts` auf Tailwind-Farben gemappt
-(`bg`, `surface`, `card`, `accent`, `muted`, `border`), damit `bg-card` oder
-`text-muted` nutzbar sind.
+Die Tokens stehen im `@theme`-Block von `src/styles/globals.css`. Tailwind 4 leitet die
+Utilities daraus direkt ab (`--color-card` → `bg-card`, `--color-text-muted` →
+`text-muted`); eine `tailwind.config.ts` gibt es nicht.
 
 ---
 

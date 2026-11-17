@@ -7,8 +7,16 @@ Layouts, nutzen den originalen Twitch-Chat und einen plattformeigenen Community-
 Optik und Bedienung orientieren sich am Twitch Theater Mode, das Produkt hat aber eine
 eigenständige Motorsport-Broadcast-Identität und deutlich mehr Funktionen.
 
-> **Status:** Dokumentations- und Strukturphase. Es existiert noch kein Anwendungscode.
-> Der Umsetzungsfahrplan steht in [`docs/02-entwicklungsplan.md`](docs/02-entwicklungsplan.md).
+> **Status:** live unter <https://multiview-streams-crtg.vercel.app>. Gebaut sind die
+> Phasen 0–4 sowie 8 und 9: Design-System, Layout-Shell, Config-Layer, Multistream-Player
+> mit Layout-Wechsel und Startknopf, Twitch-Chat aller sendenden Fahrer mit eigenem
+> Eingabefeld, Race-Information-System und Event-Seite.
+>
+> **Noch nicht gebaut:** Accounts und Profile (Phase 5 bis auf die Supabase-Anbindung),
+> Community-Chat (6), gespeicherte Layouts (7), Admin-Dashboard (10), Helix-Live-Status
+> und Zuschauerzahlen (11). Ohne Supabase-Variablen bleiben diese Funktionen einfach aus,
+> der Rest läuft vollständig. Fahrplan:
+> [`docs/02-entwicklungsplan.md`](docs/02-entwicklungsplan.md).
 
 ---
 
@@ -17,7 +25,9 @@ eigenständige Motorsport-Broadcast-Identität und deutlich mehr Funktionen.
 - **Multistream-Player** mit Layouts für 1, 2, 3, 4, 6 und 8 Streams
 - Stream maximieren, tauschen, stummschalten, Lautstärke pro Stream, Fokus-Audio
 - **Vollbild- und Theater-Mode**, Chat ein-/ausblendbar, Layout wird pro Benutzer gespeichert
-- **Twitch-Chat** des aktuell fokussierten Streams über das offizielle Chat-Embed
+- **Twitch-Chat** aller gerade sendenden Fahrer gleichzeitig über das offizielle Chat-Embed,
+  mit eigenem Eingabefeld: Zuschauer melden sich einmal mit Twitch an und schreiben unter
+  ihrem eigenen Namen direkt auf der Seite (`NEXT_PUBLIC_TWITCH_CLIENT_ID`)
 - **Community-Chat** über Supabase Realtime mit Moderation, Timeouts, Bans und Spam-Schutz
 - **Accounts** mit E-Mail/Passwort, Verifizierung, Passwort-Reset, Profil und Avatar
 - **Rollen** User / Moderator / Admin, durchgesetzt per Route-Guard, Server-Validierung und RLS
@@ -33,23 +43,25 @@ Die Twitch-Kanäle werden **nicht** über das Admin-Panel verwaltet, sondern zen
 
 ## Tech-Stack
 
-| Bereich | Technologie |
-| --- | --- |
-| Framework | Next.js (App Router), React, TypeScript (strict) |
-| Styling | Tailwind CSS, shadcn/ui, Lucide Icons |
-| Animation | Framer Motion (dezent, siehe Design-System) |
-| Backend | Supabase (Auth, Postgres, Realtime, Storage) |
-| Streaming | Twitch Embedded Player API, Twitch Embedded Chat |
-| Hosting | Vercel |
+| Bereich | Technologie | Version |
+| --- | --- | --- |
+| Framework | Next.js (App Router), React, TypeScript (strict) | 16.4.6 · 19.3.1 · 6.0.3 |
+| Styling | Tailwind CSS (Tokens per `@theme` in `globals.css`), shadcn/ui-Ableitungen auf Radix, Lucide Icons | 4.3.5 · 1.72.0 |
+| State | Zustand (Player), Zod (Validierung) | 5.1.0 · 4.6.7 |
+| Animation | Framer Motion (dezent, siehe Design-System) | 14.12.0 |
+| Backend | Supabase (Auth, Postgres, Realtime, Storage) — optional, Streams laufen ohne | 2.119.0 |
+| Streaming | Twitch Embedded Player API, Twitch Embedded Chat, Twitch Helix für den Chat-Versand | — |
+| Hosting | Vercel | — |
 
-Es werden jeweils die aktuellen stabilen Versionen verwendet. Die konkret installierten
-Versionen werden in Phase 0 in der `package.json` festgeschrieben.
+Alle Versionen sind in der `package.json` exakt gepinnt, ohne `^` oder `~`. Tailwind 4
+braucht **keine** `tailwind.config.ts`: die Tokens stehen in `src/styles/globals.css`.
 
 ---
 
 ## Quickstart
 
-Voraussetzungen: Node.js 20 oder neuer, npm, ein Supabase-Projekt.
+Voraussetzungen: Node.js 20 oder neuer und npm. Ein Supabase-Projekt ist **optional** —
+ohne läuft alles ausser Anmeldung, Community-Chat und gespeicherten Layouts.
 
 ```bash
 # 1. Abhängigkeiten installieren
@@ -59,7 +71,7 @@ npm install
 cp .env.example .env.local
 # Werte eintragen, siehe docs/11-umgebungsvariablen.md
 
-# 3. Supabase vorbereiten (Schema, RLS, Storage, Auth-URLs)
+# 3. Optional: Supabase vorbereiten (Schema, RLS, Storage, Auth-URLs)
 # Anleitung: docs/05-supabase-setup.md
 
 # 4. Twitch-Kanäle der Fahrer eintragen

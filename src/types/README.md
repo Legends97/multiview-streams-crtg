@@ -5,13 +5,16 @@ Komponente.
 
 | Datei | Inhalt |
 | --- | --- |
-| `stream.ts` | `StreamConfig`, `StreamStatus`, `SlotId` |
-| `layout.ts` | `LayoutId`, `LayoutPreset`, `GridSpec` |
-| `race.ts` | `RaceConfig`, `RaceStatus`, `RaceState`, `Driver`, `Stint` |
-| `event.ts` | `EventConfig`, `SocialLink`, `Sponsor`, `ScheduleEntry` |
-| `chat.ts` | `ChatMessage`, `ChatBan`, `ChatTab` |
-| `user.ts` | `Profile`, `UserRole`, `UserSettings` |
-| `database.ts` | generierte Supabase-Typen |
+| `stream.ts` | `StreamConfig` (inklusive `car`, `carNumber`, `carClass`), `StreamStatus`, `StreamLiveInfo`, `StreamStatusMap` |
+| `layout.ts` | `LayoutId`, `LayoutPreset`, `GridSpec`, `ChatTab`, `PlayerLayoutState` |
+| `race.ts` | `RaceConfig`, `RaceStatus`, `RaceState`, `RaceEntry`, `TrackInfo`, `TeamInfo`, `DriverRecord`, `RaceClock` |
+| `event.ts` | `EventConfig` (inklusive `browserTitle`), `SocialLink`, `Sponsor`, `ScheduleEntry` |
+| `chat.ts` | `ChatMessage`, `ChatBan`, `ChatRestriction`, `ModerationAction` |
+| `user.ts` | `UserRole`, `ROLE_RANK`, `Profile`, `SessionUser`, `UserSettings` |
+| `twitch.d.ts` | Typen für das global geladene Twitch-Embed-Script |
+
+`database.ts` (generierte Supabase-Typen) entsteht erst mit der ersten Migration, die
+über `0001_profiles.sql` hinausgeht.
 
 ## Regeln
 

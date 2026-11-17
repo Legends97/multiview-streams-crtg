@@ -2,19 +2,23 @@
 
 Nach Domäne gruppiert, nicht nach technischem Typ.
 
-| Ordner | Inhalt | Beispiele |
+| Ordner | Inhalt | Dateien |
 | --- | --- | --- |
-| `ui/` | generische Bausteine, shadcn/ui-Ableitungen | `Button`, `Dialog`, `Tabs`, `Avatar`, `LiveDot` |
-| `layout/` | Seitenrahmen | `SiteHeader`, `SiteFooter`, `HeroBanner`, `SponsorRow` |
-| `stream/` | Multistream-Player | `StreamGrid`, `StreamSlot`, `TwitchPlayer`, `StreamOverlay`, `StreamToolbar` |
-| `chat/` | beide Chats | `ChatPanel`, `TwitchChatEmbed`, `CommunityChat`, `ChatMessage` |
-| `race/` | Renninformationen | `StatusBadge`, `RaceClock`, `CurrentDriverCard`, `StintTimeline`, `DriverCard` |
-| `auth/` | Formulare und Benutzermenü | `AuthForm`, `UserMenu`, `AvatarUpload` |
-| `admin/` | Dashboard-Bausteine | `DataTable`, `RoleSelect`, `RaceControls`, `ModerationList` |
+| `ui/` | generische Bausteine, Ableitungen von Radix | `button`, `badge`, `card`, `dialog`, `dropdown-menu`, `input`, `label`, `select`, `slider`, `switch`, `tabs`, `tooltip`, `avatar`, `live-dot`, `skeleton`, `error-boundary` |
+| `layout/` | Seitenrahmen | `site-header`, `site-footer`, `mobile-nav`, `nav-link`, `hero-banner`, `sponsor-row` |
+| `stream/` | Multistream-Player | `live-workspace`, `stream-grid`, `stream-slot`, `twitch-player`, `stream-overlay`, `stream-toolbar`, `stream-selector-strip` |
+| `chat/` | Twitch-Chat und Community-Chat | `chat-panel`, `twitch-chat-embed`, `twitch-chat-composer`, `community-chat-gate` |
+| `race/` | Renninformationen | `status-badge`, `race-clock`, `driver-card`, `entry-table` |
+
+Noch nicht gebaut: `auth/` (Formulare, Benutzermenü, Phase 5) und `admin/`
+(Dashboard-Bausteine, Phase 10). Der Community-Chat selbst fehlt ebenfalls noch;
+`community-chat-gate` zeigt bis dahin nur den Hinweis, dass Supabase nicht
+konfiguriert ist.
 
 ## Konventionen
 
-- Dateiname gleich Komponentenname in `PascalCase.tsx`, ein Export pro Datei
+- Dateiname in `kebab-case.tsx`, die Komponente darin in `PascalCase`
+  (`stream-slot.tsx` → `StreamSlot`), ein Export pro Datei
 - Reihenfolge in der Datei: Typen → Konstanten → Komponente → Hilfsfunktionen
 - `"use client"` so tief im Baum wie möglich. Ein interaktives Overlay macht nicht die
   ganze Seite zur Client Component

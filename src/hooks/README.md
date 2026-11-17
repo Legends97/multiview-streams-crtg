@@ -3,21 +3,31 @@
 Wiederverwendbare Client-Logik. Jeder Hook steckt in einer eigenen Datei, benannt
 `use-<thema>.ts`, mit gleichnamigem benanntem Export.
 
-## Vorgesehene Hooks
+## Vorhandene Hooks
 
 | Hook | Zweck |
 | --- | --- |
 | `use-race-clock.ts` | Rennzeit, Restzeit und Fortschritt aus `race.startsAt` bzw. `race_state.started_at`; rein lokaler Timer, kein Netzwerkverkehr |
-| `use-race-state.ts` | Realtime-Subscription auf `race_state`, liefert Status, aktuellen Fahrer und Notiz |
-| `use-community-chat.ts` | Realtime-Subscription auf `chat_messages`, Nachrichtenliste, Senden, Auto-Scroll-Steuerung |
-| `use-twitch-player.ts` | Lebenszyklus einer Player-Instanz (Instanz im Ref, Mute, Volume, Qualität, Events) |
-| `use-stream-status.ts` | Live-Status aus `/api/twitch/status`, mit Fallback auf Player-Events |
-| `use-viewer-count.ts` | aggregierte Zuschauerzahl für den Header |
-| `use-media-query.ts` | Breakpoint-Erkennung für das Grid-Verhalten |
+| `use-breakpoint.ts` | Breakpoint-Erkennung für das Grid-Verhalten |
 | `use-fullscreen.ts` | Fullscreen-API inklusive Safari-Besonderheiten |
-| `use-keyboard-shortcuts.ts` | Tastenkürzel des Players, inaktiv in Eingabefeldern |
-| `use-debounced-callback.ts` | Debounce für das Speichern der Einstellungen |
-| `use-local-storage.ts` | versionierter Zugriff auf `localStorage` mit try/catch |
+| `use-keyboard-shortcuts.ts` | Tastenkürzel des Players, inaktiv in Eingabefeldern und im fokussierten Chat-iframe |
+| `use-lazy-mount.ts` | mountet schwere Inhalte erst, wenn sie sichtbar werden |
+
+Der Lebenszyklus der Player-Instanz steckt in `src/components/stream/twitch-player.tsx`
+und nicht in einem Hook: die Instanz gehört genau einer Kachel. Die Twitch-Sitzung der
+Zuschauer liest `twitch-chat-composer.tsx` über `useSyncExternalStore` aus
+`src/lib/twitch/auth.ts`.
+
+## Mit ihren Phasen geplant
+
+| Hook | Zweck | Phase |
+| --- | --- | --- |
+| `use-race-state.ts` | Realtime-Subscription auf `race_state` | 8 (Datenbankteil) |
+| `use-community-chat.ts` | Realtime-Subscription auf `chat_messages` | 6 |
+| `use-stream-status.ts` | Live-Status aus `/api/twitch/status` | 11 |
+| `use-viewer-count.ts` | aggregierte Zuschauerzahl für den Header | 11 |
+| `use-debounced-callback.ts` | Debounce für das Speichern der Einstellungen | 7 |
+| `use-local-storage.ts` | versionierter Zugriff auf `localStorage` | 7 |
 
 ## Regeln
 

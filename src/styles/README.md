@@ -7,9 +7,9 @@
 ## Regeln
 
 - Die Farb-, Radius- und Schattentokens aus
-  [`../../docs/03-design-system.md`](../../docs/03-design-system.md) stehen **nur hier** als
-  CSS-Variablen und werden in `tailwind.config.ts` auf Tailwind-Namen gemappt
-  (`bg-card`, `text-muted`, `border-border`, `bg-accent`)
+  [`../../docs/03-design-system.md`](../../docs/03-design-system.md) stehen **nur hier** im
+  `@theme`-Block. Tailwind 4 leitet die Klassen daraus selbst ab (`bg-card`, `text-muted`,
+  `border-border`, `bg-accent`) — es gibt keine `tailwind.config.ts`
 - Komponenten verwenden ausschliesslich diese Klassen, keine Hex-Werte
 - Dark Mode ist der einzige Modus. Es gibt keinen Light-Mode-Zweig und keinen Theme-Umschalter
 - Schriften werden über `next/font` im Root-Layout geladen und hier nur als Variablen

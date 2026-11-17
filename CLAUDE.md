@@ -26,7 +26,9 @@ Version pinnen, in der README im Stack-Abschnitt ergänzen.
 ## 3. Projektkonventionen
 
 - `src/`-Layout, Imports über den Alias `@/` (z. B. `@/components/stream/StreamTile`)
-- Komponentendateien in `PascalCase.tsx`, alles andere in `kebab-case.ts`
+- Alle Dateien in `kebab-case` (`twitch-player.tsx`, `use-fullscreen.ts`), die Komponente
+  darin in `PascalCase` (`TwitchPlayer`). Gilt seit Phase 1 durchgängig; Next.js-eigene
+  Dateinamen (`page.tsx`, `layout.tsx`) bleiben wie von Next.js vorgegeben
 - Hooks beginnen mit `use`, liegen in `src/hooks/`
 - Ein Export pro Komponentendatei, Default-Exports nur für Next.js-Spezialdateien
   (`page.tsx`, `layout.tsx`, `route.ts`, `error.tsx`, `loading.tsx`)

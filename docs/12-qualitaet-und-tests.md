@@ -37,7 +37,9 @@ Empfehlenswert, aber optional: ein Pre-Push-Hook, der das Gate ausführt.
 | Fahrer in Slot tauschen | kein schwarzes Flackern, kein Remount |
 | Maximieren und `Esc` | voriges Layout wird exakt wiederhergestellt |
 | Mute und Volume | wirken nur auf das betroffene Tile |
-| Fokuswechsel | genau ein Stream hat Ton, Twitch-Chat wechselt mit |
+| Fokuswechsel | genau ein Stream hat Ton; das Chat-Panel zeigt weiterhin alle sendenden Fahrer |
+| Zwei oder mehr Fahrer senden | je Fahrer ein Chat untereinander, jeder mit eigenem Eingabefeld |
+| Autoplay unterbunden | Overlay "Stream starten" erscheint, der Knopf in der Werkzeugleiste startet alle Kacheln |
 | Vollbild und Theater Mode | kein Scrollen nötig, Rückkehr sauber |
 | Reload | Layout, Belegung, Volumes wiederhergestellt |
 | 60 Minuten mit 4 Streams | Speicherverbrauch wächst nicht kontinuierlich |
@@ -69,7 +71,9 @@ beschrieben, Touch-Ziele mindestens 40 px.
 | Kanal existiert nicht | Badge "Kanal nicht gefunden", andere Tiles laufen weiter |
 | Alle Kanäle offline | Grid zeigt Platzhalter, Seite bleibt bedienbar |
 | Twitch-Script blockiert (Adblocker) | Fehlerkarte mit Hinweis, kein weisser Bildschirm |
-| Drittanbieter-Cookies blockiert | Twitch-Chat nur lesend, Hinweis plus "In Twitch öffnen" |
+| Drittanbieter-Cookies blockiert | Twitchs eigenes Eingabefeld bleibt wirkungslos und ist deshalb verdeckt; geschrieben wird über das eigene Feld nach Twitch-Anmeldung |
+| `NEXT_PUBLIC_TWITCH_CLIENT_ID` fehlt | kein eigenes Eingabefeld, Twitchs Leiste bleibt sichtbar, Knopf "Schreiben" öffnet den Chat im eigenen Fenster |
+| Twitch-Token abgelaufen oder zurückgezogen | Meldung "Anmeldung abgelaufen", Sitzung wird verworfen, erneute Anmeldung möglich |
 | Netzwerk offline und zurück | Reconnect-Versuche, dann Offline-Darstellung |
 | Supabase nicht erreichbar | Streams laufen weiter, Chat zeigt Verbindungshinweis |
 | Realtime-Verbindung bricht | automatischer Reconnect, Nachrichtenlücke wird nachgeladen |
@@ -145,8 +149,13 @@ Spätestens 48 Stunden vor dem Start:
 - [ ] `race.ts` mit richtigem `startsAt` inklusive Zeitzonen-Offset und `durationHours`
 - [ ] `event.ts` mit Team, Fahrern, Sponsoren und funktionierenden Links
 - [ ] Alle Bilder in `public/` vorhanden und optimiert (WebP oder SVG)
+- [ ] Jeder Fahrer mit `car`, `carNumber` und `carClass`; geteilte Autos tragen dieselbe
+      Nummer, und Fahrer- und Fahrzeugzahl auf Start- und Event-Seite stimmen
 - [ ] Produktionsdomain in `NEXT_PUBLIC_TWITCH_PARENTS` und `NEXT_PUBLIC_SITE_URL`
-- [ ] Supabase-Redirect-URLs vollständig
+- [ ] `NEXT_PUBLIC_TWITCH_CLIENT_ID` gesetzt und die Redirect-URL
+      `https://<domain>/auth/twitch` in der Twitch-Konsole eingetragen; eine Testnachricht
+      aus dem eigenen Eingabefeld ist im Twitch-Chat angekommen
+- [ ] Supabase-Redirect-URLs vollständig (nur falls Supabase genutzt wird)
 - [ ] Alle Migrationen auf dem Produktionsprojekt ausgeführt
 - [ ] Mindestens zwei Admins und ausreichend Moderatoren angelegt
 - [ ] SMTP für Auth-Mails konfiguriert (der eingebaute Versand ist zu stark limitiert)
